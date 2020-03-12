@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatisAutomationWebApi", "BatisAutomationWebApi\BatisAutomationWebApi.csproj", "{7A19663C-80CA-4981-B48A-6B1413B52288}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatisServiceProvider", "BatisServiceProvider\BatisServiceProvider.csproj", "{A82BCBC4-A22D-44D2-B344-C16B96B66A69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A19663C-80CA-4981-B48A-6B1413B52288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A19663C-80CA-4981-B48A-6B1413B52288}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A19663C-80CA-4981-B48A-6B1413B52288}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A19663C-80CA-4981-B48A-6B1413B52288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A82BCBC4-A22D-44D2-B344-C16B96B66A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A82BCBC4-A22D-44D2-B344-C16B96B66A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A82BCBC4-A22D-44D2-B344-C16B96B66A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A82BCBC4-A22D-44D2-B344-C16B96B66A69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {63F7F49F-AFCA-4B0E-B82D-CFA8416D4549}
+	EndGlobalSection
+EndGlobal
