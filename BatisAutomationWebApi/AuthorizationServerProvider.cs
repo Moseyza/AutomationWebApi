@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin.Security.OAuth;
+using BatisServiceProvider.Services;
+using DataTransferObjects;
 
 namespace BatisAutomationWebApi
 {
@@ -18,6 +20,9 @@ namespace BatisAutomationWebApi
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            var accountService = new AccountService();
+            var branches =   await accountService.Login(context.UserName, context.Password);
+            
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             if (context.UserName == "admin" && context.Password == "admin")
             {
