@@ -40,6 +40,9 @@
     <Reference Include="DotNetZip">
       <HintPath>lib\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="Exceptions">
+      <HintPath>lib\Exceptions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>lib\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
