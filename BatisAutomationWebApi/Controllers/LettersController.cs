@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web.Http;
+using DataTransferObjects;
 
 namespace BatisAutomationWebApi.Controllers
 {
     public class LettersController : ControllerBase
     {
+        public async Task<IList<LetterDto>> Get(Guid ownerId, DateTime? to, DateTime? from)
+        {
+            var result = await LetterService.GetLettersWithDateRange(ownerId, from, to);
+            return result.LetterList;
+        }
         // GET api/<controller>
         [AllowAnonymous]
         [HttpGet]
