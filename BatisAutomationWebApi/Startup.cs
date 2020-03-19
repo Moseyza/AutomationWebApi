@@ -23,7 +23,7 @@ namespace BatisAutomationWebApi
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/api/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(1),
                 Provider = authorizationServerProvider
             };
             app.UseOAuthAuthorizationServer(options);
