@@ -28,21 +28,26 @@ namespace BatisAutomationWebApi
                 var branches = await accountService.Login(context.UserName, context.Password);
                 var branchesId = branches.Branches.Select(x=>x.Id).Distinct().ToList();
                 var user = new UserDto() { Id = branches.User.Id};
-                var branchesService = new BranchService();
-                var branchDtos =  await branchesService.GetBranchDtos(branchesId);
-                var letterOwnerService = new LetterOwnerService();
-                var letterOwners =  await letterOwnerService.GetOwnersWithPicture(user,branchDtos);
+               
                 identity.AddClaim(new Claim("username", context.UserName));
                 identity.AddClaim(new Claim("password", context.Password));
                 identity.AddClaim(new Claim("userId", branches.User.Id.ToString()));
                 var propsDic = new Dictionary<string, string>();
-                var letterOwnerList = letterOwners.ToList();
-                for (var i = 0; i < letterOwnerList.Count; i++)
+                propsDic.Add("userId",user.Id.ToString());
+                propsDic.Add("branchesCount",branchesId.Count.ToString());
+                for (int i = 0; i < branchesId.Count; i++)
                 {
-                    propsDic.Add($"ownerId{i+1}", letterOwnerList[i].Id.ToString());
-                    propsDic.Add($"name{i + 1}", letterOwnerList[i].Name);
-                    propsDic.Add($"nameOnly{i + 1}", letterOwnerList[i].NameOnly);
+                    propsDic.Add($"branchId{i+1}", branchesId[i].ToString());
                 }
+
+
+                //var letterOwnerList = letterOwners.ToList();
+                //for (var i = 0; i < letterOwnerList.Count; i++)
+                //{
+                //    propsDic.Add($"ownerId{i+1}", letterOwnerList[i].Id.ToString());
+                //    propsDic.Add($"name{i + 1}", letterOwnerList[i].Name);
+                //    propsDic.Add($"nameOnly{i + 1}", letterOwnerList[i].NameOnly);
+                //}
                 var props = new AuthenticationProperties(propsDic);
                 var ticket = new AuthenticationTicket(identity, props);
                 context.Validated(ticket);
@@ -65,6 +70,11 @@ namespace BatisAutomationWebApi
 
             return Task.FromResult<object>(null);
         }
+
+        //public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
+        //{
+        //    return base.GrantRefreshToken(context);
+        //}
 
 
     }

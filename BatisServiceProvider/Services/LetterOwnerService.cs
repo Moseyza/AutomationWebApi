@@ -12,6 +12,7 @@ namespace BatisServiceProvider.Services
     {
         public async Task<IEnumerable<LetterOwnerDtoWithPicture>> GetOwnersWithPicture(UserDto user,IEnumerable<BranchDto> branches)
         {
+            
             return await Service.GetOwnersWithPictureThatUserInBranchHaveAccessNow(user,branches);
         }
     }

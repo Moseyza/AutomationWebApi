@@ -142,6 +142,7 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
+    <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

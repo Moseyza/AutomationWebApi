@@ -1,8 +1,12 @@
-﻿using System;
+﻿using BatisAutomationWebApi.dtos;
+using DataTransferObjects;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace BatisAutomationWebApi.Controllers
@@ -11,21 +15,22 @@ namespace BatisAutomationWebApi.Controllers
     public class LetterOwnersController : ControllerBase
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<LetterOwnerDtoWithPicture>> Post([FromBody] UserWithBranchesDto dto)
         {
-            return new string[] { "value1", "value2" };
+            
+           
+            var branchDtos = await BranchService.GetBranchDtos(dto.BranchIds);
+            var user = new UserDto() { Id = dto.UserId };
+            return await LetterOwnerService.GetOwnersWithPicture(user, branchDtos);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
+
+
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
-        {
-        }
+        //public void Post([FromBody]string value)
+        //{
+        //}
 
         // PUT api/<controller>/5
         public void Put(int id, [FromBody]string value)
