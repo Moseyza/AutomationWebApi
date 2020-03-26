@@ -142,6 +142,8 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
+    <Compile Include="Controllers\ReceivedLettersController.cs" />
+    <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -162,7 +164,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="App_Start\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BatisServiceProvider\BatisServiceProvider.csproj">

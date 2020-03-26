@@ -15,5 +15,10 @@ namespace BatisServiceProvider.Services
             return await Service.GetRecievedLetterWithPagination(new LetterListWithPagination()
                 {Owner = new LetterOwnerDto() {Id = ownerId}, From = from, To = to});
         }
+
+        public async Task<LetterListerWithPaginationResult> GetReceivedLettersWithPagination(Guid ownerId, DateTime? from, DateTime? to)
+        {
+            return await Service.GetRecievedLetterWithPagination(new LetterListWithPagination() {Owner = new LetterOwnerDto() {Id = ownerId } , From = from , To = to });
+        }
     }
 }

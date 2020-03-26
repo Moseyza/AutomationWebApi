@@ -15,5 +15,7 @@ namespace BatisServiceProvider.Services
             
             return await Service.GetOwnersWithPictureThatUserInBranchHaveAccessNow(user,branches);
         }
+
+        
     }
 }
