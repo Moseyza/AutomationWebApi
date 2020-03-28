@@ -143,6 +143,7 @@
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
+    <Compile Include="Controllers\SentLettersController.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
