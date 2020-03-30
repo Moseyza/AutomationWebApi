@@ -140,6 +140,7 @@
     <Compile Include="AuthorizationServerProvider.cs" />
     <Compile Include="AuthorizeAttribute.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
+    <Compile Include="Controllers\DraftLettersController.cs" />
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
