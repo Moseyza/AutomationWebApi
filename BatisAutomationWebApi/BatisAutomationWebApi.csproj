@@ -142,10 +142,13 @@
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\DraftLettersController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
+    <Compile Include="dtos\FileRequestDto.cs" />
+    <Compile Include="dtos\OpenLetterRequestDto.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
@@ -157,6 +160,7 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

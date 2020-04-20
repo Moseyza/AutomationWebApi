@@ -1,4 +1,5 @@
-﻿using DataTransferObjects;
+﻿using BatisAutomationWebApi.dtos;
+using DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web.Http;
 
 namespace BatisAutomationWebApi.Controllers
 {
+    [Authorize]
     public class LettersController : ControllerBase
     {
         public async Task<IList<LetterDto>> Get(Guid ownerId, DateTime? to, DateTime? from)
@@ -46,15 +48,11 @@ namespace BatisAutomationWebApi.Controllers
             return Ok("Hello " + identity.Name + " Role: " + string.Join(",", roles.ToList()));
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public async Task<OpenLetterResultDto> Post([FromBody]OpenLetterRequestDto request)
         {
+            return await LetterService.OpenLetter(request.LetterPossessionId);
         }
 
         // PUT api/<controller>/5

@@ -30,5 +30,12 @@ namespace BatisServiceProvider.Services
         {
             return await Service.GetDraftLetterWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
         }
+
+        public async Task<OpenLetterResultDto> OpenLetter(Guid letterPossessionId)
+        {
+            
+            var letterDto = await Service.GetLetterPossession(letterPossessionId);
+            return await Service.OpenLetter(letterDto);
+        }
     }
 }
