@@ -12,6 +12,7 @@ using System.Web.Http;
 namespace BatisAutomationWebApi.Controllers
 {
     [Authorize]
+    [RoutePrefix("api/LetterOwners")]
     public class LetterOwnersController : ControllerBase
     {
         // GET api/<controller>
@@ -24,6 +25,14 @@ namespace BatisAutomationWebApi.Controllers
             return await LetterOwnerService.GetOwnersWithPicture(user, branchDtos);
         }
 
+
+
+
+        [Route("ArchiveFolders")]
+        public async Task<IEnumerable<OwnerFolderDto>> Post([FromBody] dtos.LetterOwnerDto dto)
+        {
+            return await LetterOwnerService.GetArchiveFolders(dto.OwnerId);
+        }
 
       
 

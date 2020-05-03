@@ -16,6 +16,12 @@ namespace BatisServiceProvider.Services
             return await Service.GetOwnersWithPictureThatUserInBranchHaveAccessNow(user,branches);
         }
 
+
+        public async Task<IEnumerable<OwnerFolderDto>> GetArchiveFolders(Guid letterOwnerId)
+        {
+            var letterOwnerDto = await Service.Get(letterOwnerId);
+            return await Service.GetOwnerFolders(letterOwnerDto);
+        }
         
     }
 }

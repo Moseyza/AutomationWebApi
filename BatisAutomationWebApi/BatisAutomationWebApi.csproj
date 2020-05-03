@@ -148,6 +148,8 @@
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
+    <Compile Include="dtos\LetterOwnerDto.cs" />
+    <Compile Include="dtos\LetterTrailRequestDto.cs" />
     <Compile Include="dtos\OpenLetterRequestDto.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
