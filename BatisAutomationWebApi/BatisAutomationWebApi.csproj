@@ -139,6 +139,7 @@
   <ItemGroup>
     <Compile Include="AuthorizationServerProvider.cs" />
     <Compile Include="AuthorizeAttribute.cs" />
+    <Compile Include="Controllers\ArchiveFoldersController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\DraftLettersController.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Controllers\LettersController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
+    <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />
     <Compile Include="dtos\LetterTrailRequestDto.cs" />

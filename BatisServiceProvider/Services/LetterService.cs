@@ -37,6 +37,11 @@ namespace BatisServiceProvider.Services
             return await Service.GetLetterTrail(letterDto);
         }
 
+        public async Task<IEnumerable<LetterDto>> GetAllLettersInFolder(OwnerFolderDto ownerFolder)
+        {
+            return await Service.GetAllLettersInFolderReturningLetterDto(ownerFolder);
+        }
+
         public async Task<OpenLetterResultDto> OpenLetter(Guid letterPossessionId)
         {
             

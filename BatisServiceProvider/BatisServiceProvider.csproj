@@ -68,6 +68,7 @@
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\LetterOwnerService.cs" />
     <Compile Include="Services\LetterService.cs" />
+    <Compile Include="Services\OwnerFolderService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
   </ItemGroup>
   <ItemGroup />
