@@ -48,5 +48,15 @@ namespace BatisServiceProvider.Services
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             return await Service.OpenLetter(letterDto);
         }
+
+        public async Task<LetterListerWithPaginationResult> GetIncomingClosedLetters(Guid ownerId, DateTime? from, DateTime? to)
+        {
+            return await Service.GetClosedLettersWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId },From = from, To = to });
+        }
+
+        public async Task<LetterListerWithPaginationResult> GetOutgoingClosedLetters(Guid ownerId, DateTime? from, DateTime? to)
+        {
+            return await Service.GetOutgoingClosedLettersWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
+        }
     }
 }

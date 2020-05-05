@@ -62,6 +62,7 @@ namespace BatisAutomationWebApi.Controllers
         {
             return await LetterService.GetLetterTrail(request.LetterPossessionId);
         }
+         
 
         // PUT api/<controller>/5
         public void Put(int id, [FromBody]string value)
