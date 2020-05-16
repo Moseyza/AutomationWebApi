@@ -143,6 +143,7 @@
     <Compile Include="Controllers\BranchesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\DraftLettersController.cs" />
+    <Compile Include="Controllers\EnterpriseFormsController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\IncomingClosedLettersController.cs" />
     <Compile Include="Controllers\LetterOwnersController.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Controllers\OutgoingClosedLettersController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
+    <Compile Include="Controllers\WorkFlowsController.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />

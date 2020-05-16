@@ -11,7 +11,9 @@ namespace BatisAutomationWebApi.Controllers
         private static LetterOwnerService _letterOwnerService;
         private static FileService _fileService;
         private static OwnerFolderService _ownerFolderService;
-        
+        private static EnterpriseFormsService _enterpriseFormsService;
+        private static WorkflowService _workflowService;
+
 
         public static AccountService AccountService => _accountService ?? (_accountService = new AccountService());
         public static  LetterService LetterService => _letterService ?? (_letterService = new LetterService());
@@ -19,5 +21,7 @@ namespace BatisAutomationWebApi.Controllers
         public static LetterOwnerService LetterOwnerService => _letterOwnerService ?? (_letterOwnerService = new LetterOwnerService());
         public static FileService FileService => _fileService ?? (_fileService = new FileService());
         public static OwnerFolderService OwnerFolderService => _ownerFolderService ?? (_ownerFolderService = new OwnerFolderService());
+        public static EnterpriseFormsService EnterpriseFormsService => _enterpriseFormsService ?? (_enterpriseFormsService = new EnterpriseFormsService());
+        public static WorkflowService WorkflowService => _workflowService ?? (_workflowService = new WorkflowService());
     }
 }
