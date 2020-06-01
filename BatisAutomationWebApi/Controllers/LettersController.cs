@@ -3,7 +3,6 @@ using DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -62,16 +61,17 @@ namespace BatisAutomationWebApi.Controllers
         {
             return await LetterService.GetLetterTrail(request.LetterPossessionId);
         }
+
+
+        [Route("Close")]
+        public async Task Post([FromBody] CloseLetterRequestDto request)
+        {
+            await LetterService.CloseLetter(request.LetterPossessionId, request.Comment);
+            var letterDto = await LetterService.GetLetterDto(request.LetterPossessionId);
+            var ownerFolders = request.ArchiveFolderIds.Select(x=>new OwnerFolderDto() {Id = new Guid(x) });
+            await OwnerFolderService.AddToMultiFolder(letterDto, ownerFolders);
+        }
          
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
+        
     }
 }

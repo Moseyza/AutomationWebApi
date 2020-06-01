@@ -13,6 +13,12 @@ namespace BatisServiceProvider.Services
         public async Task<OwnerFolderDto> GetOwnerFolder(Guid folderId)
         {
             return await  Service.Get(folderId);
+           
+        }
+
+        public async Task AddToMultiFolder(LetterDto letterdto, IEnumerable<OwnerFolderDto> ownerFolders)
+        {
+            await Service.AddToMutiFolder(letterdto,ownerFolders);
         }
     }
 }

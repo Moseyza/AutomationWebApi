@@ -13,6 +13,7 @@ namespace BatisAutomationWebApi.Controllers
         private static OwnerFolderService _ownerFolderService;
         private static EnterpriseFormsService _enterpriseFormsService;
         private static WorkflowService _workflowService;
+        private static AutoCompleteDataService _autoCompleteDataService;
 
 
         public static AccountService AccountService => _accountService ?? (_accountService = new AccountService());
@@ -23,5 +24,6 @@ namespace BatisAutomationWebApi.Controllers
         public static OwnerFolderService OwnerFolderService => _ownerFolderService ?? (_ownerFolderService = new OwnerFolderService());
         public static EnterpriseFormsService EnterpriseFormsService => _enterpriseFormsService ?? (_enterpriseFormsService = new EnterpriseFormsService());
         public static WorkflowService WorkflowService => _workflowService ?? (_workflowService = new WorkflowService());
+        public static AutoCompleteDataService AutoCompleteDataService => _autoCompleteDataService ?? (_autoCompleteDataService = new AutoCompleteDataService());
     }
 }
