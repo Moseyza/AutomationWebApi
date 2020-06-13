@@ -10,6 +10,12 @@ namespace BatisServiceProvider.Services
         public async Task<IEnumerable<AutoCompleteDataDto>> GetCloseAutoCompleteData()
         {
             return await Service.GetAllCloseAutoCompleteData();
+            
+        }
+
+        public async Task<IEnumerable<AutoCompleteDataDto>> GetAllForwardingAutoCompleteData()
+        {
+            return await Service.GetAllForwardingAutoCompleteData();
         }
     }
 }

@@ -156,10 +156,12 @@
     <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
+    <Compile Include="dtos\ForwardingAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />
     <Compile Include="dtos\LetterTrailRequestDto.cs" />
     <Compile Include="dtos\OpenLetterRequestDto.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
+    <Compile Include="dtos\ReceipientsRequest.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

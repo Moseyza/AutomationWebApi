@@ -1,4 +1,5 @@
-﻿using DataTransferObjects;
+﻿using BatisAutomationWebApi.dtos;
+using DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace BatisAutomationWebApi.Controllers
             return await AutoCompleteDataService.GetCloseAutoCompleteData();
         }
 
-     
+
+        [Route("Forward")]
+        public async Task<IEnumerable<AutoCompleteDataDto>> Post([FromBody]ForwardingAutoCompleteDataRequest request)
+        {
+            return await AutoCompleteDataService.GetAllForwardingAutoCompleteData();
+        }
     }
 }

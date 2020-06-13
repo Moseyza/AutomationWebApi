@@ -27,6 +27,13 @@ namespace BatisServiceProvider.Services
         {
             return await Service.Get(id);
         }
-        
+
+        public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> GetOwnerRecipientsWithFaxAndEmails(Guid id)
+        {
+            var ownerDto = await GetOwnerDto(id);
+            return await Service.GetOwnersWithFaxAndEmailThatLetterOwnerCanSendLetterTo(ownerDto,new ReceiverLoadingParametersDto(),false);
+        }
+
+
     }
 }
