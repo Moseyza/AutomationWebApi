@@ -71,6 +71,19 @@ namespace BatisAutomationWebApi.Controllers
             var ownerFolders = request.ArchiveFolderIds.Select(x=>new OwnerFolderDto() {Id = new Guid(x) });
             await OwnerFolderService.AddToMultiFolder(letterDto, ownerFolders);
         }
+        [Route("Forward")]
+        public async Task<SentLetterInformationDto> Post([FromBody] ForwardLetterRequest request)
+        {
+            try {
+                var result = await LetterService.ForwardLetterWithAttachments(request.LetterPossessionId, request.MainRecipients, request.CopyRecipients);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            
+        }
          
         
     }

@@ -71,6 +71,12 @@ namespace BatisServiceProvider.Services
           return  await Service.GetLetterPossession(letterPossessionId);
         }
 
+        public async Task<SentLetterInformationDto> ForwardLetterWithAttachments(Guid letterPossessionId,IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> mainRecipients,IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> copyRecipients)
+        {
+            var letterDto = await GetLetterDto(letterPossessionId);
+            return await Service.ForwardLetterWithAttachments(letterDto, mainRecipients, copyRecipients);
+        }
+
         
     }
 }
