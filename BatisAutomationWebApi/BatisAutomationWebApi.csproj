@@ -163,6 +163,8 @@
     <Compile Include="dtos\OpenLetterRequestDto.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\ReceipientsRequest.cs" />
+    <Compile Include="dtos\SendCopyAutoCompleteDataRequest.cs" />
+    <Compile Include="dtos\SendDraftAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

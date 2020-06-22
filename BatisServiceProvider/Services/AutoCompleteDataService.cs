@@ -17,5 +17,15 @@ namespace BatisServiceProvider.Services
         {
             return await Service.GetAllForwardingAutoCompleteData();
         }
+
+        public async Task<IEnumerable<AutoCompleteDataDto>> GetSendCopyAutoCompleteData()
+        {
+            return await Service.GetAllSendCopyAutoCompleteData();
+        }
+
+        public  IEnumerable<AutoCompleteDataDto> GetSendDraftAutoCompleteData()
+        {
+            return  Service.GetAllSendDraftAutoCompleteDataSync();
+        }
     }
 }

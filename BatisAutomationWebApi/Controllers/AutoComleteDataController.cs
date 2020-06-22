@@ -27,5 +27,18 @@ namespace BatisAutomationWebApi.Controllers
         {
             return await AutoCompleteDataService.GetAllForwardingAutoCompleteData();
         }
+        [Route("SendCopy")]
+        public async Task<IEnumerable<AutoCompleteDataDto>> Post([FromBody] SendCopyAutoCompleteDataRequest request)
+        {
+            return await AutoCompleteDataService.GetSendCopyAutoCompleteData();
+        }
+
+        [Route("SendDraft")]
+        public  IEnumerable<AutoCompleteDataDto> Post([FromBody] SendDraftAutoCompleteDataRequest request)
+        {
+            return  AutoCompleteDataService.GetSendDraftAutoCompleteData();
+        }
+
+
     }
 }
