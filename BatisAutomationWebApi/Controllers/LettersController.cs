@@ -84,6 +84,19 @@ namespace BatisAutomationWebApi.Controllers
             }
             
         }
+        [Route("SendLetterFast")]
+        public async Task<SentLetterInformationDto> Post([FromBody]SendLetterFastDto dto)
+        {
+            try
+            {
+                return await LetterService.SendLetterFast(dto);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            
+        }
          
         
     }

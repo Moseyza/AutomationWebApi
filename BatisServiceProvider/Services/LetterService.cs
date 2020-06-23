@@ -77,6 +77,32 @@ namespace BatisServiceProvider.Services
             return await Service.ForwardLetterWithAttachments(letterDto, mainRecipients, copyRecipients);
         }
 
-        
+        public async Task<SentLetterInformationDto> SendLetterFast(SendLetterFastDto dto)
+        {
+            try
+            {
+                var result = await Service.SendLetterFast(dto);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Guid>> SaveDraft(SendLetterFastDto dto)
+        {
+            try
+            {
+                var result = await Service.SaveDraftLetter(dto);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
     }
 }
