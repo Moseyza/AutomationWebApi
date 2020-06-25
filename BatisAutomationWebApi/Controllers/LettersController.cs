@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using BatisServiceProvider.Services;
+using BatissWebOA;
 
 namespace BatisAutomationWebApi.Controllers
 {
@@ -97,7 +99,28 @@ namespace BatisAutomationWebApi.Controllers
             }
             
         }
-         
-        
+
+        [Route("SaveDraft")]
+        public async Task<IEnumerable<Guid>> Post([FromBody] SaveDraftRequest request)
+        {
+            try
+            {
+                var pattern = await LetterPatternService.GetFastPattern();
+                var patternFile = await FileService.GetFile(pattern.File.Id);
+                var wordChanger = new WordChanger();
+                var bookmarks = new Dictionary<string, object>() { { "Content",request.Dto.StringContent } };
+                var mainPart = wordChanger.SetBookmarks(patternFile.Content, bookmarks);
+                patternFile.Content = mainPart;
+                patternFile.Extension = @"اصل نامه.docx";
+                request.Dto.Parts.Insert(0,new PartsDto() { Id = patternFile.Id,File = patternFile});
+                return await  LetterService.SaveDraft(request.Dto);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
+
     }
 }

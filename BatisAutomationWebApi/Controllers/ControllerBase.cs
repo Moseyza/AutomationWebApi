@@ -14,6 +14,7 @@ namespace BatisAutomationWebApi.Controllers
         private static EnterpriseFormsService _enterpriseFormsService;
         private static WorkflowService _workflowService;
         private static AutoCompleteDataService _autoCompleteDataService;
+        private static LetterPatternService _letterPatternService;
 
 
         public static AccountService AccountService => _accountService ?? (_accountService = new AccountService());
@@ -25,5 +26,6 @@ namespace BatisAutomationWebApi.Controllers
         public static EnterpriseFormsService EnterpriseFormsService => _enterpriseFormsService ?? (_enterpriseFormsService = new EnterpriseFormsService());
         public static WorkflowService WorkflowService => _workflowService ?? (_workflowService = new WorkflowService());
         public static AutoCompleteDataService AutoCompleteDataService => _autoCompleteDataService ?? (_autoCompleteDataService = new AutoCompleteDataService());
+        public static LetterPatternService LetterPatternService =>_letterPatternService ?? (_letterPatternService = new LetterPatternService());
     }
 }
