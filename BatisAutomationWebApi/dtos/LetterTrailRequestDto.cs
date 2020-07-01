@@ -9,4 +9,10 @@ namespace BatisAutomationWebApi.dtos
     {
         public Guid LetterPossessionId { get; set; }
     }
+
+    public class LetterTrailWithAttachmentRequestDto
+    {
+        public Guid LetterPossessionId { get; set; }
+        public Guid CurrentOwnerId { get; set; }
+    }
 }

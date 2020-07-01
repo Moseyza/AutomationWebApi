@@ -16,6 +16,20 @@ namespace BatisServiceProvider.Services
         {
             var result =  await Service.GetAllThatLetterOwnerHasUsedOrSeen(ownerId);
             return result;
+
+        }
+
+        public async Task<IEnumerable<EnterpriseFormDto>> GetLetterOwnerEnterpriseForms(LetterOwnerDto owner)
+        {
+            try
+            {
+                var result = await Service.GetAllThatLetterOwnerCanSeeAndCanStartWorkflowFromAutomationLetter(owner);
+                return result.Result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         //public async Task<PagedResultData<EnterpriseFormDto>> GetOwnerVisibleEnterpriseForms(LetterOwnerDto owner)

@@ -61,8 +61,17 @@ namespace BatisAutomationWebApi.Controllers
         [Route("LetterTrail")]
         public async Task<LetterTrailDto> Post([FromBody]LetterTrailRequestDto request)
         {
-            return await LetterService.GetLetterTrail(request.LetterPossessionId);
+            var result =  await LetterService.GetLetterTrail(request.LetterPossessionId);
+            return result;
         }
+
+        [Route("LetterTrailWithAttachment")]
+        public async Task<LetterTrailWithAttachmentsDto> Post([FromBody]LetterTrailWithAttachmentRequestDto request)
+        {
+            var result = await LetterService.GetLetterTrailWithAttachment(request.LetterPossessionId,request.CurrentOwnerId);
+            return result;
+        }
+
 
 
         [Route("Close")]
