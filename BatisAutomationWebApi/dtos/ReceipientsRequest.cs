@@ -9,4 +9,9 @@ namespace BatisAutomationWebApi.dtos
     {
         public Guid OwnerId { get; set; }
     }
+
+    public class AllOwnersRequest
+    {
+
+    }
 }

@@ -43,6 +43,12 @@ namespace BatisAutomationWebApi.Controllers
         }
 
 
+        [Route("All")]
+        public async Task<IEnumerable<DataTransferObjects.LetterOwnerDto>> Post([FromBody] dtos.AllOwnersRequest request )
+        {
+            return await LetterOwnerService.GetAllLetterOwners();
+        }
+
         // POST api/<controller>
         //public void Post([FromBody]string value)
         //{

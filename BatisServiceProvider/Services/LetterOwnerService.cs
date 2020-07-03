@@ -34,6 +34,12 @@ namespace BatisServiceProvider.Services
             return await Service.GetOwnersWithFaxAndEmailThatLetterOwnerCanSendLetterTo(ownerDto,new ReceiverLoadingParametersDto(),false);
         }
 
+        public async Task<IEnumerable<LetterOwnerDto>> GetAllLetterOwners()
+        {
+            var result = await Service.GetAll();
+            return result;
+        }
+
 
     }
 }
