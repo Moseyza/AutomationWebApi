@@ -101,7 +101,7 @@ namespace BatisAutomationWebApi.Controllers
         }
 
         [Route("SaveDraft")]
-        public async Task<IEnumerable<Guid>> Post([FromBody] SaveDraftRequest request)
+        public async /*Task<IEnumerable<Guid>> */Task<SentLetterInformationDto> Post([FromBody] SaveDraftRequest request)
         {
             try
             {
@@ -113,7 +113,8 @@ namespace BatisAutomationWebApi.Controllers
                 patternFile.Content = mainPart;
                 patternFile.Extension = @"اصل نامه.docx";
                 request.Dto.Parts.Insert(0,new PartsDto() { Id = patternFile.Id,File = patternFile});
-                return await  LetterService.SaveDraft(request.Dto);
+                //return await  LetterService.SaveDraft(request.Dto);
+                return await LetterService.SendLetterFast(request.Dto);
             }
             catch (Exception e)
             {
