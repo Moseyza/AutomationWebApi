@@ -34,7 +34,15 @@ namespace BatisServiceProvider.Services
         public async Task<LetterTrailDto> GetLetterTrail(Guid letterPossessionId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
+            
             return await Service.GetLetterTrail(letterDto);
+        }
+
+        public async Task<LetterTrailWithAttachmentsDto> GetLetterTrailWithAttachment(Guid letterPossessionId,Guid currentOwnerId)
+        {
+            var letterDto = await Service.GetLetterPossession(letterPossessionId);
+            var result = await Service.GetLetterTrailWithAttachmentWithPermissions(letterDto, currentOwnerId);
+            return result;
         }
 
         public async Task<IEnumerable<LetterDto>> GetAllLettersInFolder(OwnerFolderDto ownerFolder)

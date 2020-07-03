@@ -162,6 +162,7 @@
     <Compile Include="dtos\FileRequestDto.cs" />
     <Compile Include="dtos\ForwardingAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\ForwardLetterRequest.cs" />
+    <Compile Include="dtos\GetOwnerFormsRequest.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />
     <Compile Include="dtos\LetterTrailRequestDto.cs" />
     <Compile Include="dtos\OpenLetterRequestDto.cs" />

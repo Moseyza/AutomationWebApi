@@ -5,8 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using BatisAutomationWebApi.dtos;
 using DataTransferObjects;
 using DataTransferObjects.Utilities;
+using LetterOwnerDto = DataTransferObjects.LetterOwnerDto;
 
 namespace BatisAutomationWebApi.Controllers
 {
@@ -18,6 +20,14 @@ namespace BatisAutomationWebApi.Controllers
         public async Task<IEnumerable<EnterpriseFormDto>> Post([FromBody] LetterOwnerDto dto)
         {
             return await EnterpriseFormsService.GetOwnerUsedEnterpriseForms(dto.Id);
+        }
+
+
+        [Route("OwnerForms")]
+        public async Task<IEnumerable<EnterpriseFormDto>> Post([FromBody] OwnerFormsRequest request)
+        {
+            var owner = await LetterOwnerService.GetOwnerDto(request.OwnerId);
+            return await EnterpriseFormsService.GetLetterOwnerEnterpriseForms(owner);
         }
 
         //[Route("VisibleForms")]
