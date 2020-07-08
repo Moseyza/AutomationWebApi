@@ -22,10 +22,10 @@ namespace BatisAutomationWebApi.Controllers
         // GET api/<controller>
         [AllowAnonymous]
         [HttpGet]
-        [Route("forall")]
+        [Route("ServerTime")]
         public IHttpActionResult Get()
         {
-            return Ok("Now server time is: " + DateTime.Now.ToString());
+            return Ok(DateTime.Now.ToString());
             
         }
 
@@ -129,6 +129,12 @@ namespace BatisAutomationWebApi.Controllers
             {
                 return null;
             }
+        }
+
+        [Route("SearchAll")]
+        public async Task<IEnumerable<LetterSearchResult>> Post([FromBody] LetterSearchDto letterSearchDto)
+        {
+            return await LetterService.SearchAll(letterSearchDto);
         }
 
 

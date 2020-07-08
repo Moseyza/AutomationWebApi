@@ -112,6 +112,19 @@ namespace BatisServiceProvider.Services
             }
         }
 
+        public async Task<IEnumerable<LetterSearchResult>> SearchAll(LetterSearchDto searchDto)
+        {
+            try
+            {
+                var result = await Service.SearchAll(searchDto);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
 
     }
 }
