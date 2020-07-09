@@ -72,6 +72,20 @@ namespace BatisServiceProvider.Services
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             var closingDto = new ClosingLetterDataDto() { ClosingComment = comment };
             await Service.CloseLetter(letterDto, closingDto);
+            
+        }
+
+        public async Task CloseLetterFast(Guid letterPossessionId)
+        {
+            var letterDto = await Service.GetLetterPossession(letterPossessionId);
+            await Service.CloseLetter(letterDto, new ClosingLetterDataDto());
+            
+        }
+
+        public async Task RestoreLetter(Guid letterPossessionId)
+        {
+            var letterDto = await Service.GetLetterPossession(letterPossessionId);
+            await Service.RestoreLetter(letterDto);
         }
 
         public async Task<LetterDto> GetLetterDto(Guid letterPossessionId)

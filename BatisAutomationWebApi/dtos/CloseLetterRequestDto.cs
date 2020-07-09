@@ -13,4 +13,14 @@ namespace BatisAutomationWebApi.dtos
         public List<string> AttachmentNames { get; set; }
         public List<byte[]> AttachmentContents { get; set; }
     }
+
+    public class CloseLetterFastRequestDto
+    {
+        public Guid LetterPossessionId { get; set; }
+    }
+
+    public class RestoreLetterRequestDto
+    {
+        public Guid LetterPossessionId { get; set; }
+    }
 }

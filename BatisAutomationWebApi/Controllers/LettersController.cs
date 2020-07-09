@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 using BatisServiceProvider.Services;
 using BatissWebOA;
 
@@ -81,6 +82,32 @@ namespace BatisAutomationWebApi.Controllers
             var letterDto = await LetterService.GetLetterDto(request.LetterPossessionId);
             var ownerFolders = request.ArchiveFolderIds.Select(x=>new OwnerFolderDto() {Id = new Guid(x) });
             await OwnerFolderService.AddToMultiFolder(letterDto, ownerFolders);
+        }
+        [Route("CloseFast")]
+        public async Task<IHttpActionResult> Post([FromBody] CloseLetterFastRequestDto request)
+        {
+            try
+            {
+                await LetterService.CloseLetterFast(request.LetterPossessionId);
+                return Ok("ok");
+            }
+            catch (Exception e)
+            {
+                return new ExceptionResult(e,null); 
+            }
+        }
+        [Route("RestoreLetter")]
+        public async Task<IHttpActionResult> Post([FromBody] RestoreLetterRequestDto request)
+        {
+            try
+            {
+                await LetterService.CloseLetterFast(request.LetterPossessionId);
+                return Ok("ok");
+            }
+            catch (Exception e)
+            {
+                return new ExceptionResult(e, null);
+            }
         }
         [Route("Forward")]
         public async Task<SentLetterInformationDto> Post([FromBody] ForwardLetterRequest request)
