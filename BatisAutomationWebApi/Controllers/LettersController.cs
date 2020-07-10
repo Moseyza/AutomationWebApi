@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using BatisServiceProvider.Services;
 using BatissWebOA;
+using System.Globalization;
 
 namespace BatisAutomationWebApi.Controllers
 {
@@ -26,7 +27,8 @@ namespace BatisAutomationWebApi.Controllers
         [Route("ServerTime")]
         public IHttpActionResult Get()
         {
-            return Ok(DateTime.Now.ToString());
+            
+            return Ok(DateTime.Now.ToString("dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
             
         }
 
