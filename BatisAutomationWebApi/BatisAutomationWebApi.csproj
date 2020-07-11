@@ -143,6 +143,7 @@
   <ItemGroup>
     <Compile Include="AuthorizationServerProvider.cs" />
     <Compile Include="AuthorizeAttribute.cs" />
+    <Compile Include="Controllers\AnnouncementBoardController.cs" />
     <Compile Include="Controllers\ArchiveFoldersController.cs" />
     <Compile Include="Controllers\AutoComleteDataController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
     <Compile Include="Controllers\WorkFlowsController.cs" />
+    <Compile Include="dtos\AccessibleAnnouncementBoardsRequest.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />

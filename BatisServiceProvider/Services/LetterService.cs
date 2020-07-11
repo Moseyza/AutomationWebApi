@@ -141,5 +141,18 @@ namespace BatisServiceProvider.Services
         }
 
 
+        public async Task<IEnumerable<AnnouncementDto>> GetAnnouncementsInBoard(RequestAnnouncementsDto request)
+        {
+            try
+            {
+                var result = await Service.GetAnnouncementsInBoard(request);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
     }
 }

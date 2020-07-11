@@ -166,6 +166,12 @@ namespace BatisAutomationWebApi.Controllers
             return await LetterService.SearchAll(letterSearchDto);
         }
 
+        [Route("Announcements")]
+        public async Task<IEnumerable<AnnouncementDto>> Post([FromBody] RequestAnnouncementsDto request)
+        {
+            return await LetterService.GetAnnouncementsInBoard(request);
+        }
+
 
     }
 }
