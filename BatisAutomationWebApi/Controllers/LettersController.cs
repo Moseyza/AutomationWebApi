@@ -27,8 +27,8 @@ namespace BatisAutomationWebApi.Controllers
         [Route("ServerTime")]
         public IHttpActionResult Get()
         {
-            
-            return Ok(DateTime.Now.ToString("dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture));
+            var test = DateTime.Now.ToString( CultureInfo.InvariantCulture);
+            return Ok(DateTime.Now.ToString( CultureInfo.InvariantCulture));
             
         }
 
@@ -98,12 +98,12 @@ namespace BatisAutomationWebApi.Controllers
                 return new ExceptionResult(e,null); 
             }
         }
-        [Route("RestoreLetter")]
+        [Route("RejectClosedLetter")]
         public async Task<IHttpActionResult> Post([FromBody] RestoreLetterRequestDto request)
         {
             try
             {
-                await LetterService.CloseLetterFast(request.LetterPossessionId);
+                await LetterService.RestoreLetter(request.LetterPossessionId);
                 return Ok("ok");
             }
             catch (Exception e)

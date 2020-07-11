@@ -85,7 +85,8 @@ namespace BatisServiceProvider.Services
         public async Task RestoreLetter(Guid letterPossessionId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
-            await Service.RestoreLetter(letterDto);
+            //await Service.RestoreLetter(letterDto);
+            await Service.RejectLetterConfirmation(letterDto);
         }
 
         public async Task<LetterDto> GetLetterDto(Guid letterPossessionId)
