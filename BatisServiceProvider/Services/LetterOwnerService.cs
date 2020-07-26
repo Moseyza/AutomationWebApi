@@ -21,12 +21,15 @@ namespace BatisServiceProvider.Services
         {
             var letterOwnerDto = await Service.Get(letterOwnerId);
             return await Service.GetOwnerFolders(letterOwnerDto);
+            
         }
 
         public async Task<LetterOwnerDto> GetOwnerDto(Guid id)
         {
             return await Service.Get(id);
         }
+
+       
 
         public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> GetOwnerRecipientsWithFaxAndEmails(Guid id)
         {
@@ -38,6 +41,12 @@ namespace BatisServiceProvider.Services
         {
             var result = await Service.GetAll();
             return result;
+        }
+
+        public async Task<List<SignDto>> GetSignFor(List<Guid> ids)
+        {
+            var result = await Service.GetSignFor(ids);
+            return result.ToList();
         }
 
 

@@ -9,5 +9,7 @@ namespace BatisAutomationWebApi.dtos
     public class SaveDraftRequest
     {
         public SendLetterFastDto Dto { get; set; }
+
+        public bool IsForSender {get;set;}
     }
 }

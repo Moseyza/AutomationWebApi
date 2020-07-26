@@ -43,6 +43,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aspose.Pdf">
+      <HintPath>lib\Aspose.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Words">
+      <HintPath>lib\Aspose.Words.dll</HintPath>
+    </Reference>
     <Reference Include="DataTransferObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\BatisServiceProvider\lib\DataTransferObjects.dll</HintPath>
@@ -179,7 +185,10 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\FilePresenter.cs" />
     <Compile Include="Utilities\WordChanger.cs" />
+    <Compile Include="Utilities\WordToPdfConverter.cs" />
+    <Compile Include="Utilities\XpsCreatorFromWordDataAndBookmarks.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />

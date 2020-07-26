@@ -113,18 +113,33 @@ namespace BatisServiceProvider.Services
             }
         }
 
-        public async Task<IEnumerable<Guid>> SaveDraft(SendLetterFastDto dto)
+        public async Task<SentLetterInformationDto> SendLetter(SendLetterDto dto)
         {
             try
             {
-             
-                var result = await Service.SaveDraftLetter(dto);
+                var result = await Service.SendLetter(dto);
                 return result;
             }
             catch (Exception e)
             {
                 return null;
             }
+        }
+
+
+
+        public async Task<IEnumerable<Guid>> SaveDraft(SendLetterDto dto)
+        {
+            //try
+            //{
+             
+                var result = await Service.SaveDraftLetter(dto);
+                return result;
+            //}
+            //catch (Exception e)
+            //{
+            //    return null;
+            //}
         }
 
         public async Task<IEnumerable<LetterSearchResult>> SearchAll(LetterSearchDto searchDto)
@@ -152,6 +167,20 @@ namespace BatisServiceProvider.Services
             {
                 return null;
             }
+        }
+
+        public async Task Delete(LetterDto letterDto)
+        {
+            try
+            {
+                await Service.LogicalDeleteLetter(letterDto);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
     }

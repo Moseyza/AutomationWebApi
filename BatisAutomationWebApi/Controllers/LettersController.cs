@@ -138,6 +138,35 @@ namespace BatisAutomationWebApi.Controllers
             
         }
 
+
+        [Route("SendLetter")]
+        public async Task<SentLetterInformationDto> Post([FromBody] SendLetterDto dto)
+        {
+            try
+            {
+                var sendResults =  await LetterService.SendLetter(dto);
+                if (dto.DraftRecievers.Any())
+                {
+                    //dto.ParentDraftLetterId = Guid.Empty;
+                    dto.LetterId = Guid.Empty;
+                    dto.Sender = null;
+                    dto.Recievers = null;
+                    dto.CopyRecievers = null;
+                    dto.DateTime = DateTime.Now;
+                    dto.Parts[0].Id = Guid.Empty;
+                    if(dto.LetterRefrences == null) dto.LetterRefrences = new List<LetterReferencesToOtherLettersDto>();
+                    var draftSentIds = await LetterService.SaveDraft(dto);
+                    
+                }
+
+                return sendResults;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         [Route("SaveDraft")]
         public async /*Task<IEnumerable<Guid>> */Task<SentLetterInformationDto> Post([FromBody] SaveDraftRequest request)
         {
@@ -151,8 +180,16 @@ namespace BatisAutomationWebApi.Controllers
                 patternFile.Content = mainPart;
                 patternFile.Extension = @"اصل نامه.docx";
                 request.Dto.Parts.Insert(0,new PartsDto() { Id = patternFile.Id,File = patternFile});
-                //return await  LetterService.SaveDraft(request.Dto);
-                return await LetterService.SendLetterFast(request.Dto);
+                if (!request.IsForSender)
+                {
+                    request.Dto.Recievers = null;
+                    request.Dto.CopyRecievers = null;
+                    request.Dto.Sender = null;
+                }
+
+                var result =  await  LetterService.SaveDraft(request.Dto);
+                return  new SentLetterInformationDto();
+                //return await LetterService.SendLetterFast(request.Dto);
             }
             catch (Exception e)
             {
@@ -170,6 +207,14 @@ namespace BatisAutomationWebApi.Controllers
         public async Task<IEnumerable<AnnouncementDto>> Post([FromBody] RequestAnnouncementsDto request)
         {
             return await LetterService.GetAnnouncementsInBoard(request);
+        }
+
+
+        [Route("DeleteLetter")]
+        public async Task Post([FromBody] LetterDto letterDto)
+        {
+             await LetterService.Delete(letterDto);
+
         }
 
 
