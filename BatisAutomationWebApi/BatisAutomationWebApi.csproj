@@ -179,6 +179,7 @@
     <Compile Include="dtos\SaveDraftRequest.cs" />
     <Compile Include="dtos\SendCopyAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\SendDraftAutoCompleteDataRequest.cs" />
+    <Compile Include="dtos\SendLetterAndSaveDraftResults.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

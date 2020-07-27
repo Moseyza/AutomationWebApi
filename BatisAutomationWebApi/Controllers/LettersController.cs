@@ -140,11 +140,12 @@ namespace BatisAutomationWebApi.Controllers
 
 
         [Route("SendLetter")]
-        public async Task<SentLetterInformationDto> Post([FromBody] SendLetterDto dto)
+        public async Task<SendLetterAndSaveDraftResults> Post([FromBody] SendLetterDto dto)
         {
             try
             {
                 var sendResults =  await LetterService.SendLetter(dto);
+                IEnumerable<Guid> draftSentIds = null;
                 if (dto.DraftRecievers.Any())
                 {
                     //dto.ParentDraftLetterId = Guid.Empty;
@@ -155,11 +156,11 @@ namespace BatisAutomationWebApi.Controllers
                     dto.DateTime = DateTime.Now;
                     dto.Parts[0].Id = Guid.Empty;
                     if(dto.LetterRefrences == null) dto.LetterRefrences = new List<LetterReferencesToOtherLettersDto>();
-                    var draftSentIds = await LetterService.SaveDraft(dto);
-                    
+                    draftSentIds = await LetterService.SaveDraft(dto);
                 }
 
-                return sendResults;
+                var result = new SendLetterAndSaveDraftResults() {LetterNo =  sendResults.LetterNumber,IsAnyDraftSaved = draftSentIds?.Any()};
+                return result;
             }
             catch (Exception e)
             {
@@ -168,7 +169,7 @@ namespace BatisAutomationWebApi.Controllers
         }
 
         [Route("SaveDraft")]
-        public async /*Task<IEnumerable<Guid>> */Task<SentLetterInformationDto> Post([FromBody] SaveDraftRequest request)
+        public async /*Task<IEnumerable<Guid>> */Task<SendLetterAndSaveDraftResults> Post([FromBody] SaveDraftRequest request)
         {
             try
             {
@@ -187,9 +188,8 @@ namespace BatisAutomationWebApi.Controllers
                     request.Dto.Sender = null;
                 }
 
-                var result =  await  LetterService.SaveDraft(request.Dto);
-                return  new SentLetterInformationDto();
-                //return await LetterService.SendLetterFast(request.Dto);
+                var draftIds =  await  LetterService.SaveDraft(request.Dto);
+                return new SendLetterAndSaveDraftResults(){IsAnyDraftSaved = draftIds.Any()};
             }
             catch (Exception e)
             {
