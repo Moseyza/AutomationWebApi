@@ -32,6 +32,19 @@ namespace BatisServiceProvider.Services
             }
         }
 
+        public async Task<EnterpriseFormDto> GetEnterpriseForm(Guid formId)
+        {
+            try
+            {
+                var result = await Service.Get(formId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+
         //public async Task<PagedResultData<EnterpriseFormDto>> GetOwnerVisibleEnterpriseForms(LetterOwnerDto owner)
         //{
 

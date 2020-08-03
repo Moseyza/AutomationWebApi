@@ -167,6 +167,7 @@
     <Compile Include="dtos\AccessibleAnnouncementBoardsRequest.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
+    <Compile Include="dtos\EnterpriseFormRequest.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
     <Compile Include="dtos\ForwardingAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\ForwardLetterRequest.cs" />

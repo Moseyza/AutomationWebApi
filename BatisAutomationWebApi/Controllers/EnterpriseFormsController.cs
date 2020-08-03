@@ -30,6 +30,13 @@ namespace BatisAutomationWebApi.Controllers
             return await EnterpriseFormsService.GetLetterOwnerEnterpriseForms(owner);
         }
 
+
+        [Route("Form")]
+        public async Task<EnterpriseFormDto> Post([FromBody] EnterpriseFormRequest request)
+        {
+            return await EnterpriseFormsService.GetEnterpriseForm(request.FormId);
+        }
+
         //[Route("VisibleForms")]
         //public async Task<IEnumerable<EnterpriseFormDto>> Post([FromBody] LetterOwnerDto dto)
         //{
