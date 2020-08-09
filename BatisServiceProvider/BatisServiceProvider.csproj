@@ -68,6 +68,7 @@
     <Compile Include="Services\AnnouncementBoardService.cs" />
     <Compile Include="Services\AutoCompleteDataService.cs" />
     <Compile Include="Services\BranchService.cs" />
+    <Compile Include="Services\CompanyService.cs" />
     <Compile Include="Services\EnterpriseFormsService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\LetterOwnerService.cs" />

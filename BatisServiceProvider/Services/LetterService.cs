@@ -178,7 +178,52 @@ namespace BatisServiceProvider.Services
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                //return null;
+            }
+            
+        }
+
+        public  EnterpriseFormVaildValuesForTableColumnDto GetFormValidValues(Guid formId)
+        {
+            try
+            {
+                return  Service.GetValidValuesForEnterpriseFormTableColumns(formId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<Dictionary<string, string>> ReloadTableData(Guid id, Dictionary<string, string> accountInfo,
+            IDictionary<string, IDictionary<string, string>> evaluationResultRequestForReloadingTableValues)
+        {
+            try
+            {
+                var result = await Service.ReloadTableData(id, accountInfo, evaluationResultRequestForReloadingTableValues);
+                return result.ToDictionary(x => x.Key, x => x.Value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+             
+        }
+
+        public async Task<string> ServerSideInitialize(Guid enterpriseFormId, Dictionary<string, string> senderInfo,
+            string parameterName)
+        {
+            try
+            {
+                var result = await Service.ServerSideInitialize(enterpriseFormId, senderInfo, parameterName);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
             }
             
         }

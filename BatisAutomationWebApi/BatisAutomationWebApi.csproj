@@ -56,6 +56,9 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.11.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.11.0\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="DynamicCodeRunning">
+      <HintPath>lib\DynamicCodeRunning.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -153,6 +156,7 @@
     <Compile Include="Controllers\ArchiveFoldersController.cs" />
     <Compile Include="Controllers\AutoComleteDataController.cs" />
     <Compile Include="Controllers\BranchesController.cs" />
+    <Compile Include="Controllers\CompaniesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\DraftLettersController.cs" />
     <Compile Include="Controllers\EnterpriseFormsController.cs" />
@@ -166,8 +170,10 @@
     <Compile Include="Controllers\WorkFlowsController.cs" />
     <Compile Include="dtos\AccessibleAnnouncementBoardsRequest.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
+    <Compile Include="dtos\BehindCodeCompilingRequest.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
     <Compile Include="dtos\EnterpriseFormRequest.cs" />
+    <Compile Include="dtos\EnterpriseFormValidValuesRequest.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
     <Compile Include="dtos\ForwardingAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\ForwardLetterRequest.cs" />
@@ -187,7 +193,11 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\CodeBehindCompiler.cs" />
+    <Compile Include="Utilities\DynamicJsonConverter.cs" />
     <Compile Include="Utilities\FilePresenter.cs" />
+    <Compile Include="Utilities\ParametersUtility.cs" />
+    <Compile Include="Utilities\PersianTimeGetter.cs" />
     <Compile Include="Utilities\WordChanger.cs" />
     <Compile Include="Utilities\WordToPdfConverter.cs" />
     <Compile Include="Utilities\XpsCreatorFromWordDataAndBookmarks.cs" />

@@ -49,6 +49,10 @@ namespace BatisServiceProvider.Services
             return result.ToList();
         }
 
-
+        public async Task<LetterOwnerIdentificationInformationDto> GetLetterOwnerIdentificationInformation(Guid ownerId)
+        {
+            var ownerIdentificationInfo = await Service.GetLetterOwnerIdentificationInformation(new LetterOwnerDto() {Id = ownerId});
+            return ownerIdentificationInfo;
+        }
     }
 }
