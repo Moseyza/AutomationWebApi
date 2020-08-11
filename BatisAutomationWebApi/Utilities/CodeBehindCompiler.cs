@@ -160,21 +160,26 @@ namespace BatisAutomationWebApi.Utilities
             }
 
         }
+
+        private static LetterOwnerIdentificationInformationDto _identificationInfo = null;
         public static async Task<Dictionary<string, string>> GetAccountInfo(Guid ownerId)
         {
             var service = new LetterOwnerService();
-            var identificationInfo = await service.GetLetterOwnerIdentificationInformation(ownerId);
-            var accountInfo = new Dictionary<string, string>();
-            accountInfo.Add("CompanyContactorName", identificationInfo.CompanyContactorName);
-            accountInfo.Add("CompanyName", identificationInfo.CompanyName);
-            accountInfo.Add("Department", identificationInfo.Department);
-            accountInfo.Add("LastName", identificationInfo.LastName);
-            accountInfo.Add("Name", identificationInfo.Name);
-            accountInfo.Add("NationalCode", identificationInfo.NationalCode);
-            accountInfo.Add("OrganizationalLevel", identificationInfo.OrganizationalLevel);
-            accountInfo.Add("PersonnelCode", identificationInfo.PersonnelCode);
-            accountInfo.Add("Post", identificationInfo.Post);
-            accountInfo.Add("LetterOwnerId", identificationInfo.LetterOwnerId);
+            if(_identificationInfo == null || _identificationInfo.LetterOwnerId != ownerId.ToString())
+                _identificationInfo = await service.GetLetterOwnerIdentificationInformation(ownerId);
+            var accountInfo = new Dictionary<string, string>
+            {
+                {"CompanyContactorName", _identificationInfo.CompanyContactorName},
+                {"CompanyName", _identificationInfo.CompanyName},
+                {"Department", _identificationInfo.Department},
+                {"LastName", _identificationInfo.LastName},
+                {"Name", _identificationInfo.Name},
+                {"NationalCode", _identificationInfo.NationalCode},
+                {"OrganizationalLevel", _identificationInfo.OrganizationalLevel},
+                {"PersonnelCode", _identificationInfo.PersonnelCode},
+                {"Post", _identificationInfo.Post},
+                {"LetterOwnerId", _identificationInfo.LetterOwnerId}
+            };
             return accountInfo;
         }
 
