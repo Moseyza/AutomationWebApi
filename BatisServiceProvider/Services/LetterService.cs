@@ -228,5 +228,20 @@ namespace BatisServiceProvider.Services
             
         }
 
+        public async Task<SentLetterInformationDto> SendEnterpriseForm(SendEnterpriseFormDto enterpriseFormDto)
+        {
+            try
+            {
+                var result = await Service.SendEnterpriseForm(enterpriseFormDto);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+
+        }
+
     }
 }

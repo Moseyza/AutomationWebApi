@@ -54,5 +54,28 @@ namespace BatisServiceProvider.Services
             var ownerIdentificationInfo = await Service.GetLetterOwnerIdentificationInformation(new LetterOwnerDto() {Id = ownerId});
             return ownerIdentificationInfo;
         }
+
+        public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> GetEnterpriseFormReceivers(Guid formId,Guid senderId, Guid dependentLetterId)
+        {
+            if (dependentLetterId == Guid.Empty)
+            {
+                var parameters = new ReceiverLoadingParametersDto()
+                {
+                    EnterpriseFormId = formId, IsEnterpriseFormKnown = true, IsSendImportant = true,
+                    IsSendCopyImportant = true, IsSendDraftImportant = true
+                };
+                return await Service.GetOwnersWithFaxAndEmailThatLetterOwnerCanSendLetterTo(new LetterOwnerDto() {Id = senderId},parameters, true);
+            }
+            else
+            {
+                var parameters = new ReceiverLoadingParametersDto()
+                {
+                    EnterpriseFormId = formId, IsSendImportant = true, IsSendCopyImportant = true,
+                    IsSendDraftImportant = true, IsEnterpriseFormKnown = true,
+                    DependentLetters = new List<Guid>() {dependentLetterId}
+                };
+                return await Service.GetOwnersWithFaxAndEmailThatLetterOwnerCanSendLetterTo(new LetterOwnerDto() { Id = senderId }, parameters, true);
+            }
+        }
     }
 }

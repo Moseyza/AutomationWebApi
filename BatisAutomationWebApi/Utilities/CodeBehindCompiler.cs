@@ -251,7 +251,7 @@ namespace BatisAutomationWebApi.Utilities
             return result;
         }
 
-        private static Dictionary<string, List<dynamic>> GetTableParameterRows(string tableParameterValues)
+        public static Dictionary<string, List<dynamic>> GetTableParameterRows(string tableParameterValues)
         {
             
             var tableParameterRows = new Dictionary<string, List<dynamic>>();

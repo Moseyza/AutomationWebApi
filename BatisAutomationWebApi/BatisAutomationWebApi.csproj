@@ -171,10 +171,12 @@
     <Compile Include="dtos\AccessibleAnnouncementBoardsRequest.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
     <Compile Include="dtos\BehindCodeCompilingRequest.cs" />
+    <Compile Include="dtos\ClientSideInitializeRequest.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
     <Compile Include="dtos\EnterpriseFormRequest.cs" />
     <Compile Include="dtos\EnterpriseFormValidValuesRequest.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
+    <Compile Include="dtos\FormReceiversRequest.cs" />
     <Compile Include="dtos\ForwardingAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\ForwardLetterRequest.cs" />
     <Compile Include="dtos\GetOwnerFormsRequest.cs" />
@@ -186,6 +188,7 @@
     <Compile Include="dtos\SaveDraftRequest.cs" />
     <Compile Include="dtos\SendCopyAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\SendDraftAutoCompleteDataRequest.cs" />
+    <Compile Include="dtos\SendFormRequest.cs" />
     <Compile Include="dtos\SendLetterAndSaveDraftResults.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
