@@ -305,18 +305,26 @@ namespace BatisAutomationWebApi.Utilities
         private static Dictionary<string, string> GetParametersDictionary(string parameterValues)
         {
             var result = new Dictionary<string, string>();
-            dynamic temp = System.Web.Helpers.Json.Decode(parameterValues);
-            foreach (dynamic item in temp)
-            {
-                try
+            try
+            { 
+                dynamic temp = System.Web.Helpers.Json.Decode(parameterValues);
+                foreach (dynamic item in temp)
                 {
-                    result.Add(item.Name, ParametersUtility.ReplacePresianNumberCharsInDateStr(item.Value));
-                }
-                catch (Exception e)
-                {
+                    try
+                    {
+                        result.Add(item.Name, ParametersUtility.ReplacePresianNumberCharsInDateStr(item.Value));
+                    }
+                    catch (Exception e)
+                    {
+                        
+                    }
                     
                 }
-                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
             return result;
         }

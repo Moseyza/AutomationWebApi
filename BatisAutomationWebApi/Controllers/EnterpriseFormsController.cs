@@ -172,7 +172,7 @@ namespace BatisAutomationWebApi.Controllers
         }
 
         [Route("Send")]
-        public async Task<JsonResult<string>> Post([FromBody] SendFormRequest request)
+        public async Task<SentLetterInformationDto> Post([FromBody] SendFormRequest request)
         {
 
 
@@ -186,14 +186,13 @@ namespace BatisAutomationWebApi.Controllers
             
             //Creating bookmarks
             dynamic bookmarksDynamic = System.Web.Helpers.Json.Decode(bookmarks);
-            
             var bookmarkDtos = GetBookmarks(bookmarksDynamic);
             foreach (var bookmark in bookmarkDtos)
             {
                 bookmark.Value = ParametersUtility.ReplacePresianNumberCharsInDateStr(bookmark.Value);
             }
+            
             var tableParameterRows = CodeBehindCompiler.GetTableParameterRows(tableBookmarks);
-
             var tableBookmarksDtos = new List<EnterpriseFormBookmarkValueDto>();
             var jObject = JObject.Parse(tableBookmarks);
             
@@ -230,10 +229,9 @@ namespace BatisAutomationWebApi.Controllers
             letterName = letterName + extention;
             //setting parts
             var fileId = enterpriseForm.File.Id;
-            
             var file = await FileService.GetFile(fileId);
             file.Extension = letterName;
-
+            
             file.Id = Guid.Empty;
             file.IsBasedOnPattern = true;
             sendLetterDto.Parts = new List<PartsDto>() { new PartsDto() { PartIndex = 0, File = file } };
@@ -271,27 +269,13 @@ namespace BatisAutomationWebApi.Controllers
             {
                 part.PartIndex = fileIndex++;
             }
-
-           
-
-
-
-            //calling service 
-
-
-            
-                var sendLetterInformation =  await LetterService.SendEnterpriseForm(sendEnterpriseFormDto);
-                dynamic letterSendingInfo = new ExpandoObject();
-                letterSendingInfo.Message = "نامه با شماره " + sendLetterInformation.LetterNumber + " ارسال گردید. ";
-                var serializer = new JavaScriptSerializer();
-                serializer.RegisterConverters(new JavaScriptConverter[] { new ExpandoJSONConverter() });
-                var json = serializer.Serialize(letterSendingInfo);
-                return Json(json);
-            
-            
-
-
-            return Json("");
+            var sendLetterInformation =  await LetterService.SendEnterpriseForm(sendEnterpriseFormDto);
+            //dynamic letterSendingInfo = new ExpandoObject();
+            //letterSendingInfo.Message = "نامه با شماره " + sendLetterInformation.LetterNumber + " ارسال گردید. ";
+            //var serializer = new JavaScriptSerializer();
+            //serializer.RegisterConverters(new JavaScriptConverter[] { new ExpandoJSONConverter() });
+            //var json = serializer.Serialize(letterSendingInfo);
+            return sendLetterInformation;
         }
 
         private List<EnterpriseFormBookmarkValueDto> GetBookmarks(dynamic bookmarksDynamic)
@@ -299,7 +283,33 @@ namespace BatisAutomationWebApi.Controllers
             var result = new List<EnterpriseFormBookmarkValueDto>();
             foreach (dynamic obj in bookmarksDynamic)
             {
-                result.Add(new EnterpriseFormBookmarkValueDto() { EnterpriseFormBookmarkName = obj.Name, Value = obj.Value, EnterpriseFormBookmarkId = new Guid(obj.Id.ToString()) });
+                try
+                {
+                    result.Add(new EnterpriseFormBookmarkValueDto() { EnterpriseFormBookmarkName = obj.Name, Value = obj.Value, EnterpriseFormBookmarkId = new Guid(obj.Id.ToString()) });
+                }
+                catch (Exception e)
+                {
+                    //ignore
+                }
+                
+            }
+            return result;
+        }
+        private List<FileDto> GetFileBookmarks(dynamic bookmarksDynamic)
+        {
+            var result = new List<FileDto>();
+            foreach (dynamic obj in bookmarksDynamic)
+            {
+                try
+                {
+                    var file = new FileDto() {Extension = obj.Value.Extension,Id = new Guid(obj.Value.Id),Content = Convert.FromBase64String(obj.Value.Content)};
+                    result.Add(file);
+                }
+                catch (Exception e)
+                {
+                    //ignore
+                }
+
             }
             return result;
         }
