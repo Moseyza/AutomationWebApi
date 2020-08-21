@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Script.Serialization;
@@ -79,6 +80,7 @@ namespace BatisAutomationWebApi.Controllers
         [Route("BehindCodeExecutionResult")]
         public async Task<JsonResult<string>> Post([FromBody] BehindCodeCompilingRequest request)
         {
+            
             try
             {
                 var formInfo = await CodeBehindCompiler.GetEnterpriseFormInfo(request.FormId.ToString(), request.ParametersValue, request.TableParametersValue);
@@ -172,23 +174,31 @@ namespace BatisAutomationWebApi.Controllers
         }
 
         [Route("Send")]
-        public async Task<SentLetterInformationDto> Post([FromBody] SendFormRequest request)
+        public async Task<SentLetterInformationDto> Post(/*[FromBody] SendFormRequest request*/)
         {
-
+            var attachedFiles = new List<object>();
+            foreach(var file in HttpContext.Current.Request.Files)
+            {
+                attachedFiles.Add(file);
+            }
+            //var test = HttpContext.Current.Request.Params["test"];
+            
             try
             {
-                var formId = request.FormId;
-                var senderId = request.SenderId;
-                var bookmarks = request.Bookmarks;
-                var tableBookmarks = request.TableBookmarks;
-                //Getting EnterpriseForm
+                var receivers = JsonConvert.DeserializeObject<List<LetterOwnerDtoForSendingFaxAndEmailAndSms>>(HttpContext.Current.Request.Params["receivers"]);
+                var copyReceivers = JsonConvert.DeserializeObject<List<LetterOwnerDtoForSendingFaxAndEmailAndSms>>(HttpContext.Current.Request.Params["copyReceivers"]);
+                var draftReceivers = JsonConvert.DeserializeObject<List<LetterOwnerDtoForSendingFaxAndEmailAndSms>>(HttpContext.Current.Request.Params["draftReceivers"]);
+                var formId = new Guid(JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["formId"].ToString()));
+                var senderId = new Guid(JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["senderId"].ToString()));
+                var bookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["bookmarks"]);
+                var tableBookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["tableBookmarks"]);
 
                 var enterpriseForm = await EnterpriseFormsService.GetEnterpriseForm(formId);
 
                 //Creating bookmarks
                 dynamic bookmarksDynamic = System.Web.Helpers.Json.Decode(bookmarks);
                 var bookmarkDtos = GetBookmarks(bookmarksDynamic);
-                var attachedFiles = GetFileBookmarks(bookmarksDynamic);
+                //var attachedFiles = GetFileBookmarks(bookmarksDynamic);
                 foreach (var bookmark in bookmarkDtos)
                 {
                     bookmark.Value = ParametersUtility.ReplacePresianNumberCharsInDateStr(bookmark.Value);
@@ -209,9 +219,9 @@ namespace BatisAutomationWebApi.Controllers
 
                 var sendLetterDto = new SendLetterDto() { LetterRefrences = new List<LetterReferencesToOtherLettersDto>(), DateTime = DateTime.Now };
                 sendLetterDto.Sender = new LetterOwnerDto() { Id = senderId };
-                sendLetterDto.Recievers = request.Receivers;
-                sendLetterDto.CopyRecievers = request.CopyReceivers;
-                sendLetterDto.DraftRecievers = request.DraftReceivers;
+                sendLetterDto.Recievers = receivers;
+                sendLetterDto.CopyRecievers = copyReceivers;
+                sendLetterDto.DraftRecievers = draftReceivers;
                 //setting some properties
                 sendLetterDto.TransferType = TransferType.SystemDelivery;
                 sendLetterDto.Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId);
