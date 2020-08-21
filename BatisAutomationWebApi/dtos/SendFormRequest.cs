@@ -15,5 +15,13 @@ namespace BatisAutomationWebApi.dtos
         public IEnumerable<LetterOwnerDtoForSendingFaxAndEmailAndSms> DraftReceivers { set; get; }
         public IEnumerable<LetterOwnerDtoForSendingFaxAndEmailAndSms> Receivers { set; get; }
         public IEnumerable<LetterOwnerDtoForSendingFaxAndEmailAndSms> CopyReceivers { set; get; }
+        public List<AttachedFile> AttachedFiles { get; set; }
+    }
+
+    public class AttachedFile
+    {
+        public Guid FileId { get; set; }
+        public string FileName { get; set; }
+        public string FileContent { get; set; }
     }
 }

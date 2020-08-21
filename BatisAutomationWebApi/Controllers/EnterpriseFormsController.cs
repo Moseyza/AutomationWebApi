@@ -32,7 +32,7 @@ namespace BatisAutomationWebApi.Controllers
         public async Task<IEnumerable<EnterpriseFormDto>> Post([FromBody] OwnerFormsRequest request)
         {
             var owner = await LetterOwnerService.GetOwnerDto(request.OwnerId);
-            var forms =  (await EnterpriseFormsService.GetLetterOwnerEnterpriseForms(owner)).ToList();
+            var forms = (await EnterpriseFormsService.GetLetterOwnerEnterpriseForms(owner)).ToList();
             foreach (var form in forms)
             {
                 foreach (var bookmark in form.Bookmarks)
@@ -48,26 +48,26 @@ namespace BatisAutomationWebApi.Controllers
         [Route("Form")]
         public async Task<EnterpriseFormDto> Post([FromBody] EnterpriseFormRequest request)
         {
-            var form =  await EnterpriseFormsService.GetEnterpriseForm(request.FormId);
+            var form = await EnterpriseFormsService.GetEnterpriseForm(request.FormId);
             foreach (var bookmark in form.Bookmarks)
             {
-                bookmark.DefaultValue =  await ParametersUtility.UpdateParameters(bookmark.DefaultValue, request.OwnerId);
+                bookmark.DefaultValue = await ParametersUtility.UpdateParameters(bookmark.DefaultValue, request.OwnerId);
             }
             return form;
         }
 
         [Route("FormValidValues")]
-        public  EnterpriseFormVaildValuesForTableColumnDto Post([FromBody] EnterpriseFormValidValuesRequest request)
+        public EnterpriseFormVaildValuesForTableColumnDto Post([FromBody] EnterpriseFormValidValuesRequest request)
         {
             return LetterService.GetFormValidValues(request.FormId);
         }
-        
+
         [Route("FormReceivers")]
         public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> Post([FromBody] FormReceiversRequest request)
         {
             try
             {
-                var result = await LetterOwnerService.GetEnterpriseFormReceivers(request.FormId, request.SenderId,request.DependentLetterId);
+                var result = await LetterOwnerService.GetEnterpriseFormReceivers(request.FormId, request.SenderId, request.DependentLetterId);
                 return result;
             }
             catch (Exception e)
@@ -82,7 +82,7 @@ namespace BatisAutomationWebApi.Controllers
             try
             {
                 var formInfo = await CodeBehindCompiler.GetEnterpriseFormInfo(request.FormId.ToString(), request.ParametersValue, request.TableParametersValue);
-                var validationResult =  await CodeBehindCompiler.GetFormValidatorResult(request.FormId.ToString(),
+                var validationResult = await CodeBehindCompiler.GetFormValidatorResult(request.FormId.ToString(),
                     formInfo.EnterpriseForm.ValidationComputationCode, formInfo.ParametersValueDictunary,
                     formInfo.TableParameterRows, request.ChangedParameterName, request.OwnerId.ToString());
 
@@ -100,7 +100,7 @@ namespace BatisAutomationWebApi.Controllers
 
                     if (validationResult.RequestForReloadingTableValues.Count > 0)
                     {
-                        var reloadedData = await CodeBehindCompiler.ReloadTableData(request.FormId,identificationInfo,validationResult.RequestForReloadingTableValues);
+                        var reloadedData = await CodeBehindCompiler.ReloadTableData(request.FormId, identificationInfo, validationResult.RequestForReloadingTableValues);
                         foreach (var table in reloadedData.Keys)
                         {
                             var value = reloadedData[table];
@@ -153,7 +153,7 @@ namespace BatisAutomationWebApi.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-            
+
         }
 
         [Route("ClientSideInitialize")]
@@ -175,107 +175,111 @@ namespace BatisAutomationWebApi.Controllers
         public async Task<SentLetterInformationDto> Post([FromBody] SendFormRequest request)
         {
 
-
-            var formId = request.FormId;
-            var senderId = request.SenderId;
-            var bookmarks = request.Bookmarks;
-            var tableBookmarks = request.TableBookmarks;
-            //Getting EnterpriseForm
-            
-            var enterpriseForm = await EnterpriseFormsService.GetEnterpriseForm(formId);
-            
-            //Creating bookmarks
-            dynamic bookmarksDynamic = System.Web.Helpers.Json.Decode(bookmarks);
-            var bookmarkDtos = GetBookmarks(bookmarksDynamic);
-            foreach (var bookmark in bookmarkDtos)
+            try
             {
-                bookmark.Value = ParametersUtility.ReplacePresianNumberCharsInDateStr(bookmark.Value);
-            }
-            
-            var tableParameterRows = CodeBehindCompiler.GetTableParameterRows(tableBookmarks);
-            var tableBookmarksDtos = new List<EnterpriseFormBookmarkValueDto>();
-            var jObject = JObject.Parse(tableBookmarks);
-            
-            foreach (var tableName in tableParameterRows.Keys)
-            {
-                var jsonStr = jObject[tableName].ToString();
-                var tableBookmark =  enterpriseForm.Bookmarks.FirstOrDefault(x => x.EnglishName == tableName);
-                var tableId = Guid.Empty;
-                if (tableBookmark != null) tableId = tableBookmark.Id;
-                tableBookmarksDtos.Add(new EnterpriseFormBookmarkValueDto() { EnterpriseFormBookmarkName = tableName, Value = jsonStr, EnterpriseFormBookmarkId = tableId });
-            }
+                var formId = request.FormId;
+                var senderId = request.SenderId;
+                var bookmarks = request.Bookmarks;
+                var tableBookmarks = request.TableBookmarks;
+                //Getting EnterpriseForm
 
+                var enterpriseForm = await EnterpriseFormsService.GetEnterpriseForm(formId);
 
+                //Creating bookmarks
+                dynamic bookmarksDynamic = System.Web.Helpers.Json.Decode(bookmarks);
+                var bookmarkDtos = GetBookmarks(bookmarksDynamic);
+                var attachedFiles = GetFileBookmarks(bookmarksDynamic);
+                foreach (var bookmark in bookmarkDtos)
+                {
+                    bookmark.Value = ParametersUtility.ReplacePresianNumberCharsInDateStr(bookmark.Value);
+                }
 
-   
-            var sendLetterDto = new SendLetterDto() { LetterRefrences = new List<LetterReferencesToOtherLettersDto>(), DateTime = DateTime.Now };
-            sendLetterDto.Sender = new LetterOwnerDto() { Id = senderId };
-            sendLetterDto.Recievers = request.Receivers;
-            sendLetterDto.CopyRecievers = request.CopyReceivers;
-            sendLetterDto.DraftRecievers = request.DraftReceivers;
-            //setting some properties
-            sendLetterDto.TransferType = TransferType.SystemDelivery;
-            sendLetterDto.Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId);
-            sendLetterDto.Title = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Title);
-            sendLetterDto.Abstract = await ParametersUtility.UpdateParameters(enterpriseForm.Abstract, senderId);
-            sendLetterDto.Abstract = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Abstract);
-            sendLetterDto.IsSecured = enterpriseForm.IsSecured;
-            sendLetterDto.Priority = enterpriseForm.Priority;
-            var letterName = await ParametersUtility.UpdateParameters(enterpriseForm.MainLetterName,senderId);
-            letterName = ReplaceEnglishNameWithValue(bookmarkDtos, letterName);
-            var extention = System.IO.Path.GetExtension(enterpriseForm.File.Extension);
-            if (string.IsNullOrEmpty(extention))
-                extention = ".docx";
-            letterName = letterName + extention;
-            //setting parts
-            var fileId = enterpriseForm.File.Id;
-            var file = await FileService.GetFile(fileId);
-            file.Extension = letterName;
-            
-            file.Id = Guid.Empty;
-            file.IsBasedOnPattern = true;
-            sendLetterDto.Parts = new List<PartsDto>() { new PartsDto() { PartIndex = 0, File = file } };
-            
-            //Adding Attached files
-            //sendLetterDto.Parts.AddRange(GetRequestAttachedFiles(Request, tableBookmarksDtos));
-            //Add saved files ides
-            //var savedFileIdes = Request["SavedFilesIds"];
-            //if (!string.IsNullOrEmpty(savedFileIdes))
+                var tableParameterRows = CodeBehindCompiler.GetTableParameterRows(tableBookmarks);
+                var tableBookmarksDtos = new List<EnterpriseFormBookmarkValueDto>();
+                var jObject = JObject.Parse(tableBookmarks);
+
+                foreach (var tableName in tableParameterRows.Keys)
+                {
+                    var jsonStr = jObject[tableName].ToString();
+                    var tableBookmark = enterpriseForm.Bookmarks.FirstOrDefault(x => x.EnglishName == tableName);
+                    var tableId = Guid.Empty;
+                    if (tableBookmark != null) tableId = tableBookmark.Id;
+                    tableBookmarksDtos.Add(new EnterpriseFormBookmarkValueDto() { EnterpriseFormBookmarkName = tableName, Value = jsonStr, EnterpriseFormBookmarkId = tableId });
+                }
+
+                var sendLetterDto = new SendLetterDto() { LetterRefrences = new List<LetterReferencesToOtherLettersDto>(), DateTime = DateTime.Now };
+                sendLetterDto.Sender = new LetterOwnerDto() { Id = senderId };
+                sendLetterDto.Recievers = request.Receivers;
+                sendLetterDto.CopyRecievers = request.CopyReceivers;
+                sendLetterDto.DraftRecievers = request.DraftReceivers;
+                //setting some properties
+                sendLetterDto.TransferType = TransferType.SystemDelivery;
+                sendLetterDto.Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId);
+                sendLetterDto.Title = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Title);
+                sendLetterDto.Abstract = await ParametersUtility.UpdateParameters(enterpriseForm.Abstract, senderId);
+                sendLetterDto.Abstract = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Abstract);
+                sendLetterDto.IsSecured = enterpriseForm.IsSecured;
+                sendLetterDto.Priority = enterpriseForm.Priority;
+                var letterName = await ParametersUtility.UpdateParameters(enterpriseForm.MainLetterName, senderId);
+                letterName = ReplaceEnglishNameWithValue(bookmarkDtos, letterName);
+                var extention = System.IO.Path.GetExtension(enterpriseForm.File.Extension);
+                if (string.IsNullOrEmpty(extention))
+                    extention = ".docx";
+                letterName = letterName + extention;
+                //setting parts
+                var fileId = enterpriseForm.File.Id;
+                var file = await FileService.GetFile(fileId);
+                file.Extension = letterName;
+
+                file.Id = Guid.Empty;
+                file.IsBasedOnPattern = true;
+                sendLetterDto.Parts = new List<PartsDto>() { new PartsDto() { PartIndex = 0, File = file } };
+
+                //Adding Attached files
+                //sendLetterDto.Parts.AddRange(GetRequestAttachedFiles(Request, tableBookmarksDtos));
+                //Add saved files ides
+                //var savedFileIdes = Request["SavedFilesIds"];
+                //if (!string.IsNullOrEmpty(savedFileIdes))
                 //sendLetterDto.Parts.AddRange(AppendSavedFiles(Request["SavedFilesIds"]));
 
 
-            //Setting draft parent if exists
-            ///var parentDraftId = Request["ParentDraftId"];
-            //if (!string.IsNullOrEmpty(parentDraftId))
-            //{
+                //Setting draft parent if exists
+                ///var parentDraftId = Request["ParentDraftId"];
+                //if (!string.IsNullOrEmpty(parentDraftId))
+                //{
                 //sendLetterDto.ParentDraftLetterId = new Guid(parentDraftId);
-            //}
-            //Setting dependent letters if exists
-            //Guid dependentLetterId = Guid.Empty;
-            //Guid.TryParse(Request["DependentLetterId"], out dependentLetterId);
-            //if (dependentLetterId != Guid.Empty)
-            //{
+                //}
+                //Setting dependent letters if exists
+                //Guid dependentLetterId = Guid.Empty;
+                //Guid.TryParse(Request["DependentLetterId"], out dependentLetterId);
+                //if (dependentLetterId != Guid.Empty)
+                //{
                 //sendLetterDto.LetterRefrences = new List<LetterReferencesToOtherLettersDto>() { new LetterReferencesToOtherLettersDto() { LetterId = dependentLetterId } };
-            //}
-            //Merge bookmarks
-            bookmarkDtos.AddRange(tableBookmarksDtos);
-            //Creating SendEnterpriseFormDto 
-            var sendEnterpriseFormDto = new SendEnterpriseFormDto() { EnterpriseFormId = formId };
-            sendEnterpriseFormDto.BookmarkValues = bookmarkDtos;
-            sendEnterpriseFormDto.SendLetterInformation = sendLetterDto;
-            //Mapping file bookmark to parts
-            var fileIndex = 0;
-            foreach (var part in sendLetterDto.Parts)
-            {
-                part.PartIndex = fileIndex++;
+                //}
+                //Merge bookmarks
+                bookmarkDtos.AddRange(tableBookmarksDtos);
+                //Creating SendEnterpriseFormDto 
+                var sendEnterpriseFormDto = new SendEnterpriseFormDto() { EnterpriseFormId = formId };
+                sendEnterpriseFormDto.BookmarkValues = bookmarkDtos;
+                sendEnterpriseFormDto.SendLetterInformation = sendLetterDto;
+                //Mapping file bookmark to parts
+                var fileIndex = 0;
+                foreach (var part in sendLetterDto.Parts)
+                {
+                    part.PartIndex = fileIndex++;
+                }
+                var sendLetterInformation = await LetterService.SendEnterpriseForm(sendEnterpriseFormDto);
+                //dynamic letterSendingInfo = new ExpandoObject();
+                //letterSendingInfo.Message = "نامه با شماره " + sendLetterInformation.LetterNumber + " ارسال گردید. ";
+                //var serializer = new JavaScriptSerializer();
+                //serializer.RegisterConverters(new JavaScriptConverter[] { new ExpandoJSONConverter() });
+                //var json = serializer.Serialize(letterSendingInfo);
+                return sendLetterInformation;
             }
-            var sendLetterInformation =  await LetterService.SendEnterpriseForm(sendEnterpriseFormDto);
-            //dynamic letterSendingInfo = new ExpandoObject();
-            //letterSendingInfo.Message = "نامه با شماره " + sendLetterInformation.LetterNumber + " ارسال گردید. ";
-            //var serializer = new JavaScriptSerializer();
-            //serializer.RegisterConverters(new JavaScriptConverter[] { new ExpandoJSONConverter() });
-            //var json = serializer.Serialize(letterSendingInfo);
-            return sendLetterInformation;
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         private List<EnterpriseFormBookmarkValueDto> GetBookmarks(dynamic bookmarksDynamic)
@@ -291,7 +295,7 @@ namespace BatisAutomationWebApi.Controllers
                 {
                     //ignore
                 }
-                
+
             }
             return result;
         }
@@ -302,7 +306,7 @@ namespace BatisAutomationWebApi.Controllers
             {
                 try
                 {
-                    var file = new FileDto() {Extension = obj.Value.Extension,Id = new Guid(obj.Value.Id),Content = Convert.FromBase64String(obj.Value.Content)};
+                    var file = new FileDto() { Extension = obj.Value.Extension, Id = new Guid(obj.Value.Id), Content = Convert.FromBase64String(obj.Value.Content) };
                     result.Add(file);
                 }
                 catch (Exception e)
