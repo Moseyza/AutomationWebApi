@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -80,7 +81,7 @@ namespace BatisAutomationWebApi.Controllers
         [Route("BehindCodeExecutionResult")]
         public async Task<JsonResult<string>> Post([FromBody] BehindCodeCompilingRequest request)
         {
-            
+
             try
             {
                 var formInfo = await CodeBehindCompiler.GetEnterpriseFormInfo(request.FormId.ToString(), request.ParametersValue, request.TableParametersValue);
@@ -177,12 +178,12 @@ namespace BatisAutomationWebApi.Controllers
         public async Task<SentLetterInformationDto> Post(/*[FromBody] SendFormRequest request*/)
         {
             var attachedFiles = new List<object>();
-            foreach(var file in HttpContext.Current.Request.Files)
+            foreach (var file in HttpContext.Current.Request.Files)
             {
                 attachedFiles.Add(file);
             }
             //var test = HttpContext.Current.Request.Params["test"];
-            
+
             try
             {
                 var receivers = JsonConvert.DeserializeObject<List<LetterOwnerDtoForSendingFaxAndEmailAndSms>>(HttpContext.Current.Request.Params["receivers"]);
@@ -192,6 +193,7 @@ namespace BatisAutomationWebApi.Controllers
                 var senderId = new Guid(JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["senderId"].ToString()));
                 var bookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["bookmarks"]);
                 var tableBookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["tableBookmarks"]);
+                var fileBookmarks = JsonConvert.DeserializeObject<List<string>>(HttpContext.Current.Request.Params["fileBookmarks"]);
 
                 var enterpriseForm = await EnterpriseFormsService.GetEnterpriseForm(formId);
 
@@ -238,15 +240,18 @@ namespace BatisAutomationWebApi.Controllers
                 letterName = letterName + extention;
                 //setting parts
                 var fileId = enterpriseForm.File.Id;
-                var file = await FileService.GetFile(fileId);
-                file.Extension = letterName;
+                var mainFile = await FileService.GetFile(fileId);
+                mainFile.Extension = letterName;
 
-                file.Id = Guid.Empty;
-                file.IsBasedOnPattern = true;
-                sendLetterDto.Parts = new List<PartsDto>() { new PartsDto() { PartIndex = 0, File = file } };
+                mainFile.Id = Guid.Empty;
+                mainFile.IsBasedOnPattern = true;
+                var formParts = new List<PartsDto>() { new PartsDto() { PartIndex = 0, File = mainFile } };
 
                 //Adding Attached files
-                //sendLetterDto.Parts.AddRange(GetRequestAttachedFiles(Request, tableBookmarksDtos));
+                var attachedParts = GetRequestAttachedFiles(HttpContext.Current.Request.Files);
+                formParts.AddRange(attachedParts);
+                sendLetterDto.Parts = formParts;
+
                 //Add saved files ides
                 //var savedFileIdes = Request["SavedFilesIds"];
                 //if (!string.IsNullOrEmpty(savedFileIdes))
@@ -278,12 +283,23 @@ namespace BatisAutomationWebApi.Controllers
                 {
                     part.PartIndex = fileIndex++;
                 }
+                foreach (var bookmark in sendEnterpriseFormDto.BookmarkValues)
+                {
+                    if (fileBookmarks.Contains(bookmark.EnterpriseFormBookmarkName))
+                    {
+                        var bookmarkFileId = bookmark.Value;
+                        if (sendLetterDto.Parts.Any(x => x.File.PreferedId.ToString() == bookmarkFileId))
+                        {
+                            var parts = sendLetterDto.Parts.Where(x => x.File.PreferedId.ToString() == bookmarkFileId);
+                            var partsDtos = parts as PartsDto[] ?? parts.ToArray();
+                            if (partsDtos.Any())
+                            {
+                                bookmark.FileIndex = partsDtos.ToList()[0].PartIndex;
+                            }
+                        }
+                    }
+                }
                 var sendLetterInformation = await LetterService.SendEnterpriseForm(sendEnterpriseFormDto);
-                //dynamic letterSendingInfo = new ExpandoObject();
-                //letterSendingInfo.Message = "نامه با شماره " + sendLetterInformation.LetterNumber + " ارسال گردید. ";
-                //var serializer = new JavaScriptSerializer();
-                //serializer.RegisterConverters(new JavaScriptConverter[] { new ExpandoJSONConverter() });
-                //var json = serializer.Serialize(letterSendingInfo);
                 return sendLetterInformation;
             }
             catch (Exception e)
@@ -292,6 +308,26 @@ namespace BatisAutomationWebApi.Controllers
             }
         }
 
+        private List<PartsDto> GetRequestAttachedFiles(HttpFileCollection files)
+        {
+            var result = new List<PartsDto>();
+            var index = 1;
+            for (var i = 0; i < files.Count; i++)
+            {
+                var part = new PartsDto();
+                byte[] fileData = null;
+
+                using (var binaryReader = new BinaryReader(files[i].InputStream))
+                {
+                    fileData = binaryReader.ReadBytes(files[i].ContentLength);
+                }
+                part.File = new FileDto() { Id = Guid.Empty, PreferedId = new Guid(files.Keys[i]), Extension = files[i].FileName, Content = fileData };
+                part.PartIndex = index++;
+                result.Add(part);
+            }
+
+            return result;
+        }
         private List<EnterpriseFormBookmarkValueDto> GetBookmarks(dynamic bookmarksDynamic)
         {
             var result = new List<EnterpriseFormBookmarkValueDto>();
