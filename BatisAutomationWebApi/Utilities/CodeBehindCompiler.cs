@@ -59,7 +59,8 @@ namespace BatisAutomationWebApi.Utilities
             var assembly = GetBehindCodeAssembly(new Guid(formId), behindCode);
             if (assembly != null)
             {
-                var validatorInstance = GetValidatorInstance(assembly);
+                
+                IEnterpriseFormValidator validatorInstance = GetValidatorInstance(assembly);
                 if (validatorInstance != null)
                 {
 
@@ -67,12 +68,43 @@ namespace BatisAutomationWebApi.Utilities
                     {
                         var result =
                         validatorInstance.ClientSideInitialize(() => ServerSideInitialize(new Guid(formId), new Guid(senderId), parameterName)).Result;
-
+                        
                         return result;
                     }
                     catch (Exception ex)
                     {
                         return "";
+
+                    }
+                }
+                return null;
+            }
+            return null;
+
+        }
+
+        public static async Task<EnterpriseFormValidatorResult> GetClientSideInitialEvaluateResults(string formId, string behindCode, Dictionary<string, string> parametersDic, Dictionary<string, List<dynamic>> tableParameterRow, string senderId)
+        {
+            var assembly = GetBehindCodeAssembly(new Guid(formId), behindCode);
+            if (assembly != null)
+            {
+
+                IEnterpriseFormValidator validatorInstance = GetValidatorInstance(assembly);
+                if (validatorInstance != null)
+                {
+
+                    try
+                    {
+                        var accountInfo =  await GetAccountInfo(new Guid(senderId));
+                        var result =  validatorInstance.ClientSideInitialEvaluate(parametersDic, accountInfo, tableParameterRow);
+
+
+
+                        return result;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
 
                     }
                 }

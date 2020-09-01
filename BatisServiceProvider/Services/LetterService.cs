@@ -188,6 +188,34 @@ namespace BatisServiceProvider.Services
             try
             {
                 return  Service.GetValidValuesForEnterpriseFormTableColumns(formId);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<Guid> GetAnnouncementBoardIdForLetter(Guid letterId)
+        {
+            try
+            {
+                return await Service.GetAnnouncementBoardIdForLetter(letterId);
+            }
+            catch (Exception e)
+            {
+                return Guid.Empty;
+            }
+            
+        }
+
+        public async Task<MultipleEnterpriseFormValuesDto> GetMultipleEnterpriseFormValues(Guid letterId)
+        {
+            try
+            {
+                var result = await Service.GetMultipleEnterpriseFormValuesDto(new RequestMultipleEnterpriseFormValuesDto(){LetterIds = new List<Guid>() {letterId}});
+                return result;
             }
             catch (Exception e)
             {

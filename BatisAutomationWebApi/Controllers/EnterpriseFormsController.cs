@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Script.Serialization;
+using DynamicCodeRunning.ValidationAndCalculationForEnterpriseForms;
 using LetterOwnerDto = DataTransferObjects.LetterOwnerDto;
 
 namespace BatisAutomationWebApi.Controllers
@@ -58,10 +59,45 @@ namespace BatisAutomationWebApi.Controllers
             return form;
         }
 
+        [Route("NextForm")]
+        public async Task<NextEnterpriseFormResponse> Post([FromBody] NextEnterpriseFormRequest request)
+        {
+            var response = new NextEnterpriseFormResponse();
+            var form = await EnterpriseFormsService.GetEnterpriseForm(request.FormId);
+            var multipleFormValues = await LetterService.GetMultipleEnterpriseFormValues(request.LetterId);
+            foreach (var bookmark in form.Bookmarks)
+            {
+                bookmark.DefaultValue = await ParametersUtility.UpdateParameters(bookmark.DefaultValue, request.OwnerId);
+            }
+
+            if (form.ShallInheritAnnouncementBoard)
+            {
+                var announcementBoardId = await LetterService.GetAnnouncementBoardIdForLetter(request.LetterId);
+                if (announcementBoardId == Guid.Empty)
+                    response.AnnouncementBoardIdToSend = announcementBoardId;
+                else
+                    response.AnnouncementBoardIdToSend = form.DefaultAnnouncementBoardId;
+            }
+
+            response.EnterpriseForm = form; 
+            response.DependentLetterId = request.LetterId;
+            response.MultipleValues = multipleFormValues;
+            response.SenderId = request.OwnerId;
+
+            return response;
+        }
+
+        [Route("NextFormsList")]
+        public async Task<IEnumerable<EnterpriseFormDto>> Post([FromBody] NextFormsListRequest request)
+        {
+             return await EnterpriseFormsService.GetNextEnterpriseForms(request.LetterOwnerId, request.LetterId);
+        }
+
         [Route("FormValidValues")]
         public EnterpriseFormVaildValuesForTableColumnDto Post([FromBody] EnterpriseFormValidValuesRequest request)
         {
             return LetterService.GetFormValidValues(request.FormId);
+            
         }
 
         [Route("FormReceivers")]
@@ -174,6 +210,21 @@ namespace BatisAutomationWebApi.Controllers
             return result;
         }
 
+        [Route("ClientSideInitialEvaluate")]
+        public async Task<EnterpriseFormValidatorResult> Post([FromBody] ClientSideInitialEvaluateRequest request)
+        {
+            JArray JsonArray = new JArray();
+            JObject resultJObj = new JObject();
+            EnterpriseFormInfo formInfo = await CodeBehindCompiler.GetEnterpriseFormInfo(request.FormId.ToString(), request.ParametersValue, request.TableParametersValue);
+            //foreach (var parameterName in formInfo.ParametersValueDictunary.Keys)
+            //{
+                var initializeResult = await CodeBehindCompiler.GetClientSideInitialEvaluateResults(request.FormId.ToString(), formInfo.EnterpriseForm.ValidationComputationCode, formInfo.ParametersValueDictunary, formInfo.TableParameterRows, request.OwnerId.ToString());
+                //resultJObj[parameterName] = "";//initializeResult;
+            //}
+            return initializeResult;
+        }
+
+
         [Route("Send")]
         public async Task<SentLetterInformationDto> Post(/*[FromBody] SendFormRequest request*/)
         {
@@ -194,6 +245,10 @@ namespace BatisAutomationWebApi.Controllers
                 var bookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["bookmarks"]);
                 var tableBookmarks = JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["tableBookmarks"]);
                 var fileBookmarks = JsonConvert.DeserializeObject<List<string>>(HttpContext.Current.Request.Params["fileBookmarks"]);
+                var dependentLetterId = Guid.Empty;
+                if(HttpContext.Current.Request.Params["dependentLetterId"] != null)
+                    Guid.TryParse(JsonConvert.DeserializeObject<string>(HttpContext.Current.Request.Params["dependentLetterId"].ToString()),out dependentLetterId);
+                
 
                 var enterpriseForm = await EnterpriseFormsService.GetEnterpriseForm(formId);
 
@@ -227,13 +282,13 @@ namespace BatisAutomationWebApi.Controllers
                 //setting some properties
                 sendLetterDto.TransferType = TransferType.SystemDelivery;
                 sendLetterDto.Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId);
-                sendLetterDto.Title = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Title);
+                sendLetterDto.Title = await ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Title,enterpriseForm);
                 sendLetterDto.Abstract = await ParametersUtility.UpdateParameters(enterpriseForm.Abstract, senderId);
-                sendLetterDto.Abstract = ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Abstract);
+                sendLetterDto.Abstract = await ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Abstract, enterpriseForm);
                 sendLetterDto.IsSecured = enterpriseForm.IsSecured;
                 sendLetterDto.Priority = enterpriseForm.Priority;
                 var letterName = await ParametersUtility.UpdateParameters(enterpriseForm.MainLetterName, senderId);
-                letterName = ReplaceEnglishNameWithValue(bookmarkDtos, letterName);
+                letterName = await ReplaceEnglishNameWithValue(bookmarkDtos, letterName, enterpriseForm);
                 var extention = System.IO.Path.GetExtension(enterpriseForm.File.Extension);
                 if (string.IsNullOrEmpty(extention))
                     extention = ".docx";
@@ -267,10 +322,10 @@ namespace BatisAutomationWebApi.Controllers
                 //Setting dependent letters if exists
                 //Guid dependentLetterId = Guid.Empty;
                 //Guid.TryParse(Request["DependentLetterId"], out dependentLetterId);
-                //if (dependentLetterId != Guid.Empty)
-                //{
-                //sendLetterDto.LetterRefrences = new List<LetterReferencesToOtherLettersDto>() { new LetterReferencesToOtherLettersDto() { LetterId = dependentLetterId } };
-                //}
+                if (dependentLetterId != Guid.Empty)
+                {
+                    sendLetterDto.LetterRefrences = new List<LetterReferencesToOtherLettersDto>() { new LetterReferencesToOtherLettersDto() { LetterId = dependentLetterId } };
+                }
                 //Merge bookmarks
                 bookmarkDtos.AddRange(tableBookmarksDtos);
                 //Creating SendEnterpriseFormDto 
@@ -363,11 +418,23 @@ namespace BatisAutomationWebApi.Controllers
             }
             return result;
         }
-        private string ReplaceEnglishNameWithValue(List<EnterpriseFormBookmarkValueDto> bookmarks, string inputString)
+        private async Task<string> ReplaceEnglishNameWithValue(List<EnterpriseFormBookmarkValueDto> bookmarks, string inputString,EnterpriseFormDto enterpriseForm)
         {
             foreach (var bookmark in bookmarks)
             {
-                inputString = inputString.Replace("%%" + bookmark.EnterpriseFormBookmarkName + "%%", bookmark.Value);
+                var currentBookmark =  enterpriseForm.Bookmarks.FirstOrDefault(bm => bm.Id == bookmark.EnterpriseFormBookmarkId);
+                if(currentBookmark == null)continue;
+                if (currentBookmark.Type == EnterpriseFormBookmarksTypesDto.Company)
+                {
+                    var allCompanies = await CompanyService.GetAll();
+                    var company = allCompanies.ToList().FirstOrDefault(c => c.Id == new Guid(bookmark.Value));
+                    if (company == null) continue;
+                    inputString = inputString.Replace("%%" + bookmark.EnterpriseFormBookmarkName + "%%", company.Name);
+                }
+                else
+                {
+                    inputString = inputString.Replace("%%" + bookmark.EnterpriseFormBookmarkName + "%%", bookmark.Value);
+                }
             }
             return inputString;
         }

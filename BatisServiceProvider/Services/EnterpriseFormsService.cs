@@ -47,6 +47,9 @@ namespace BatisServiceProvider.Services
             }
         }
 
+
+        
+
         public  IList<Tuple<string, string>> ExecuteQuery(string query)
         {
             try
@@ -60,7 +63,23 @@ namespace BatisServiceProvider.Services
                 return null;
             }
         }
-    
+
+
+        public async Task<IEnumerable<EnterpriseFormDto>> GetNextEnterpriseForms(Guid letterOwnerId, Guid letterId)
+        {
+            try
+            {
+                var forms = await Service.GetAllThatLetterOwnerCanSeeAndCanContinueWorkflowFromAutomationLetter(new LetterOwnerDto() { Id = letterOwnerId }, new LetterDto() { Id = letterId });
+                return forms;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+            
+        }
+
 
 
         //public async Task<PagedResultData<EnterpriseFormDto>> GetOwnerVisibleEnterpriseForms(LetterOwnerDto owner)

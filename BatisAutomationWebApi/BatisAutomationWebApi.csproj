@@ -182,6 +182,8 @@
     <Compile Include="dtos\GetOwnerFormsRequest.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />
     <Compile Include="dtos\LetterTrailRequestDto.cs" />
+    <Compile Include="dtos\NextEnterpriseFormRequest.cs" />
+    <Compile Include="dtos\NextFormsListRequest.cs" />
     <Compile Include="dtos\OpenLetterRequestDto.cs" />
     <Compile Include="dtos\PaginatedLettersRequestDto.cs" />
     <Compile Include="dtos\ReceipientsRequest.cs" />
