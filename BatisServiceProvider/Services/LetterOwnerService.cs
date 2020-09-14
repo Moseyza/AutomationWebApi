@@ -43,6 +43,20 @@ namespace BatisServiceProvider.Services
             return result;
         }
 
+        public async Task<IEnumerable<LetterOwnerDto>> GetAllCompanyLetterOwners()
+        {
+            try
+            {
+                var result = await Service.GetAllCompanyLetterOwners();
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public async Task<List<SignDto>> GetSignFor(List<Guid> ids)
         {
             var result = await Service.GetSignFor(ids);

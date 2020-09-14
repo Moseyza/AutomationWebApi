@@ -75,6 +75,7 @@
     <Compile Include="Services\LetterPatternService.cs" />
     <Compile Include="Services\LetterService.cs" />
     <Compile Include="Services\OwnerFolderService.cs" />
+    <Compile Include="Services\PersonnelService.cs" />
     <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Services\WorkflowService.cs" />
   </ItemGroup>

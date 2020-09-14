@@ -8,17 +8,17 @@ using ServerWrapper.ClientSideServices.UserServices;
 
 namespace BatisServiceProvider.Services
 {
-    public class LetterService :ServiceBase<ITaskedBasedLetterServices>
+    public class LetterService : ServiceBase<ITaskedBasedLetterServices>
     {
-        public  async Task<LetterListerWithPaginationResult> GetLettersWithDateRange(Guid ownerId,DateTime? from,DateTime? to)
+        public async Task<LetterListerWithPaginationResult> GetLettersWithDateRange(Guid ownerId, DateTime? from, DateTime? to)
         {
             return await Service.GetRecievedLetterWithPagination(new LetterListWithPagination()
-                {Owner = new LetterOwnerDto() {Id = ownerId}, From = from, To = to});
+            { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
         }
 
         public async Task<LetterListerWithPaginationResult> GetReceivedLettersWithPagination(Guid ownerId, DateTime? from, DateTime? to)
         {
-            return await Service.GetRecievedLetterWithPagination(new LetterListWithPagination() {Owner = new LetterOwnerDto() {Id = ownerId } , From = from , To = to });
+            return await Service.GetRecievedLetterWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
         }
 
         public async Task<LetterListerWithPaginationResult> GetSentLettersWithPagination(Guid ownerId, DateTime? from, DateTime? to)
@@ -34,11 +34,11 @@ namespace BatisServiceProvider.Services
         public async Task<LetterTrailDto> GetLetterTrail(Guid letterPossessionId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
-            
+
             return await Service.GetLetterTrail(letterDto);
         }
 
-        public async Task<LetterTrailWithAttachmentsDto> GetLetterTrailWithAttachment(Guid letterPossessionId,Guid currentOwnerId)
+        public async Task<LetterTrailWithAttachmentsDto> GetLetterTrailWithAttachment(Guid letterPossessionId, Guid currentOwnerId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             var result = await Service.GetLetterTrailWithAttachmentWithPermissions(letterDto, currentOwnerId);
@@ -52,14 +52,14 @@ namespace BatisServiceProvider.Services
 
         public async Task<OpenLetterResultDto> OpenLetter(Guid letterPossessionId)
         {
-            
+
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             return await Service.OpenLetter(letterDto);
         }
 
         public async Task<LetterListerWithPaginationResult> GetIncomingClosedLetters(Guid ownerId, DateTime? from, DateTime? to)
         {
-            return await Service.GetClosedLettersWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId },From = from, To = to });
+            return await Service.GetClosedLettersWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
         }
 
         public async Task<LetterListerWithPaginationResult> GetOutgoingClosedLetters(Guid ownerId, DateTime? from, DateTime? to)
@@ -67,19 +67,19 @@ namespace BatisServiceProvider.Services
             return await Service.GetOutgoingClosedLettersWithPagination(new LetterListWithPagination() { Owner = new LetterOwnerDto() { Id = ownerId }, From = from, To = to });
         }
 
-        public async Task CloseLetter(Guid letterPossessionId, string comment) 
+        public async Task CloseLetter(Guid letterPossessionId, string comment)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             var closingDto = new ClosingLetterDataDto() { ClosingComment = comment };
             await Service.CloseLetter(letterDto, closingDto);
-            
+
         }
 
         public async Task CloseLetterFast(Guid letterPossessionId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
             await Service.CloseLetter(letterDto, new ClosingLetterDataDto());
-            
+
         }
 
         public async Task RestoreLetter(Guid letterPossessionId)
@@ -89,12 +89,32 @@ namespace BatisServiceProvider.Services
             await Service.RejectLetterConfirmation(letterDto);
         }
 
-        public async Task<LetterDto> GetLetterDto(Guid letterPossessionId)
+        public async Task<DraftLetterDto> GetDraftLetter(Guid possessionId)
         {
-          return  await Service.GetLetterPossession(letterPossessionId);
+            try
+            {
+                var result = await Service.GetSingleDraft(possessionId);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
-        public async Task<SentLetterInformationDto> ForwardLetterWithAttachments(Guid letterPossessionId,IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> mainRecipients,IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> copyRecipients)
+        public async Task<LetterListerWithPaginationResult> GetAllSavedDraftsWithPagination(Guid ownerId,DateTime? from, DateTime? to)
+        {
+            var result = await Service.GetDraftLetterWithPagination(new LetterListWithPagination()
+                {From = from, To = to, Owner = new LetterOwnerDto() {Id = ownerId}});
+            return result;
+        }
+
+        public async Task<LetterDto> GetLetterDto(Guid letterPossessionId)
+        {
+            return await Service.GetLetterPossession(letterPossessionId);
+        }
+
+        public async Task<SentLetterInformationDto> ForwardLetterWithAttachments(Guid letterPossessionId, IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> mainRecipients, IEnumerable<LetterOwnerWithSendingInformationAndAttachmentsDto> copyRecipients)
         {
             var letterDto = await GetLetterDto(letterPossessionId);
             return await Service.ForwardLetterWithAttachments(letterDto, mainRecipients, copyRecipients);
@@ -132,9 +152,9 @@ namespace BatisServiceProvider.Services
         {
             //try
             //{
-             
-                var result = await Service.SaveDraftLetter(dto);
-                return result;
+
+            var result = await Service.SaveDraftLetter(dto);
+            return result;
             //}
             //catch (Exception e)
             //{
@@ -180,14 +200,16 @@ namespace BatisServiceProvider.Services
                 Console.WriteLine(e);
                 //return null;
             }
-            
+
         }
 
-        public  EnterpriseFormVaildValuesForTableColumnDto GetFormValidValues(Guid formId)
+        public EnterpriseFormVaildValuesForTableColumnDto GetFormValidValues(Guid formId)
         {
             try
             {
-                return  Service.GetValidValuesForEnterpriseFormTableColumns(formId);
+
+                return Service.GetValidValuesForEnterpriseFormTableColumns(formId);
+
 
             }
             catch (Exception e)
@@ -207,14 +229,14 @@ namespace BatisServiceProvider.Services
             {
                 return Guid.Empty;
             }
-            
+
         }
 
         public async Task<MultipleEnterpriseFormValuesDto> GetMultipleEnterpriseFormValues(Guid letterId)
         {
             try
             {
-                var result = await Service.GetMultipleEnterpriseFormValuesDto(new RequestMultipleEnterpriseFormValuesDto(){LetterIds = new List<Guid>() {letterId}});
+                var result = await Service.GetMultipleEnterpriseFormValuesDto(new RequestMultipleEnterpriseFormValuesDto() { LetterIds = new List<Guid>() { letterId } });
                 return result;
             }
             catch (Exception e)
@@ -237,7 +259,7 @@ namespace BatisServiceProvider.Services
                 Console.WriteLine(e);
                 return null;
             }
-             
+
         }
 
         public async Task<string> ServerSideInitialize(Guid enterpriseFormId, Dictionary<string, string> senderInfo,
@@ -253,22 +275,33 @@ namespace BatisServiceProvider.Services
                 Console.WriteLine(e);
                 return null;
             }
-            
+
         }
 
         public async Task<SentLetterInformationDto> SendEnterpriseForm(SendEnterpriseFormDto enterpriseFormDto)
         {
+            var result = await Service.SendEnterpriseForm(enterpriseFormDto);
+            return result;
+        }
+
+        public async Task<IEnumerable<Guid>> SaveEnterpriseFormDraft(SendEnterpriseFormDto sendEnterpriseFormDto)
+        {
+            var result = await Service.SaveDraftEnterpriseForm(sendEnterpriseFormDto);
+            return result;
+        }
+
+        public async Task<EnterpriseFormValuesDto> GetEnterpriseFormValues(Guid letterId, Guid possessionId)
+        {
             try
             {
-                var result = await Service.SendEnterpriseForm(enterpriseFormDto);
+                var result = await Service.GetEnterpriseFormValuesDto(new RequestEnterpriseFormValuesDto() { LetterId = letterId, LetterPossessionId = possessionId });
                 return result;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return null;
+                throw;
             }
-
         }
 
     }

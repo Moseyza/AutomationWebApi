@@ -2,7 +2,6 @@
 using DataTransferObjects;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
-using OperationContracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -80,6 +80,12 @@ namespace BatisServiceProvider.Services
             
         }
 
+        public async Task<DraftEnterpriseFormDto> GetBasedOnDraftLetterWithValue(Guid letterId)
+        {
+            var result =  await Service.GetBasedOnDraftLetterWithValus(new LetterDto() {Id = letterId});
+            return result;
+        }
+
 
 
         //public async Task<PagedResultData<EnterpriseFormDto>> GetOwnerVisibleEnterpriseForms(LetterOwnerDto owner)

@@ -17,6 +17,8 @@ namespace BatisAutomationWebApi.Controllers
         private static LetterPatternService _letterPatternService;
         private static AnnouncementBoardService _announcementBoardService;
         private static CompanyService _companyService;
+        private static PersonnelService _personnelService;
+        
 
 
         public static AccountService AccountService => _accountService ?? (_accountService = new AccountService());
@@ -31,5 +33,6 @@ namespace BatisAutomationWebApi.Controllers
         public static LetterPatternService LetterPatternService =>_letterPatternService ?? (_letterPatternService = new LetterPatternService());
         public static AnnouncementBoardService AnnouncementBoardService =>_announcementBoardService ?? (_announcementBoardService = new AnnouncementBoardService());
         public static CompanyService CompanyService => _companyService ?? (_companyService = new CompanyService());
+        public static PersonnelService PersonnelService => _personnelService ?? (_personnelService = new PersonnelService());
     }
 }

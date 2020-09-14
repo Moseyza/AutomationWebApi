@@ -165,8 +165,10 @@
     <Compile Include="Controllers\LetterOwnersController.cs" />
     <Compile Include="Controllers\LettersController.cs" />
     <Compile Include="Controllers\OutgoingClosedLettersController.cs" />
+    <Compile Include="Controllers\PersonnelController.cs" />
     <Compile Include="Controllers\ReceivedLettersController.cs" />
     <Compile Include="Controllers\SentLettersController.cs" />
+    <Compile Include="Controllers\ServiceTestController.cs" />
     <Compile Include="Controllers\WorkFlowsController.cs" />
     <Compile Include="dtos\AccessibleAnnouncementBoardsRequest.cs" />
     <Compile Include="dtos\ArchiveFolderDto.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="dtos\GetOwnerFormsRequest.cs" />
     <Compile Include="dtos\LetterOwnerDto.cs" />
     <Compile Include="dtos\LetterTrailRequestDto.cs" />
+    <Compile Include="dtos\LoadDraftEnterpriseFormRequest.cs" />
     <Compile Include="dtos\NextEnterpriseFormRequest.cs" />
     <Compile Include="dtos\NextFormsListRequest.cs" />
     <Compile Include="dtos\OpenLetterRequestDto.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="dtos\SendCopyAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\SendDraftAutoCompleteDataRequest.cs" />
     <Compile Include="dtos\SendFormRequest.cs" />
+    <Compile Include="dtos\SendingFormResults.cs" />
     <Compile Include="dtos\SendLetterAndSaveDraftResults.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">

@@ -129,7 +129,7 @@ namespace BatisAutomationWebApi.Utilities
             }
             if (type != null)
             {
-                var instance = (IEnterpriseFormValidator)assembly.CreateInstance(type.Name);
+                var instance = (IEnterpriseFormValidator)assembly.CreateInstance(type.FullName);
                 return instance;
             }
             return null;
@@ -344,7 +344,7 @@ namespace BatisAutomationWebApi.Utilities
                 {
                     try
                     {
-                        result.Add(item.Name, ParametersUtility.ReplacePresianNumberCharsInDateStr(item.Value));
+                        result.Add(item.Name, ParametersUtility.ReplacePresianNumberCharsInDateStr(item.Value.ToString()));
                     }
                     catch (Exception e)
                     {

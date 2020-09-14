@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using LetterOwnerDto = BatisAutomationWebApi.dtos.LetterOwnerDto;
 
 
 namespace BatisAutomationWebApi.Controllers
@@ -37,16 +38,22 @@ namespace BatisAutomationWebApi.Controllers
 
 
         [Route("Recipients")]
-        public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> Post([FromBody] dtos.RecipientsRequest dto)
+        public async Task<IEnumerable<LetterOwnerDtoWithFaxAndEmails>> Post([FromBody] RecipientsRequest dto)
         {
             return await LetterOwnerService.GetOwnerRecipientsWithFaxAndEmails(dto.OwnerId);
         }
 
 
         [Route("All")]
-        public async Task<IEnumerable<DataTransferObjects.LetterOwnerDto>> Post([FromBody] dtos.AllOwnersRequest request )
+        public async Task<IEnumerable<DataTransferObjects.LetterOwnerDto>> Post([FromBody] AllOwnersRequest request )
         {
             return await LetterOwnerService.GetAllLetterOwners();
+        }
+
+        [Route("CompanyLetterOwners")]
+        public async Task<IEnumerable<DataTransferObjects.LetterOwnerDto>> Post([FromBody] AllCompanyOwnersRequest request)
+        {
+            return await LetterOwnerService.GetAllCompanyLetterOwners();
         }
 
         // POST api/<controller>

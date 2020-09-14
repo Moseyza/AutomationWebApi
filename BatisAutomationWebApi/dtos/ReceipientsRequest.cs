@@ -14,4 +14,9 @@ namespace BatisAutomationWebApi.dtos
     {
 
     }
+
+    public class AllCompanyOwnersRequest
+    {
+
+    }
 }
