@@ -24,6 +24,12 @@ namespace BatisServiceProvider.Services
             
         }
 
+        public async Task<List<OwnerFolderDto>> GetOwnerFolders(LetterOwnerDto owner)
+        {
+            var folders =  await Service.GetOwnerFolders(owner);
+            return folders.ToList();
+        }
+
         public async Task<LetterOwnerDto> GetOwnerDto(Guid id)
         {
             return await Service.Get(id);

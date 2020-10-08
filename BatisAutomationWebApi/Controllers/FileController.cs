@@ -1,15 +1,12 @@
 ﻿using BatisAutomationWebApi.dtos;
+using BatisAutomationWebApi.Utilities;
 using DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using BatisAutomationWebApi.Utilities;
 
 namespace BatisAutomationWebApi.Controllers
 {
@@ -21,7 +18,8 @@ namespace BatisAutomationWebApi.Controllers
         [Route("Pdf")]
         public async Task<FileDto> Post([FromBody]FileRequestDto request)
         {
-           return await FileService.GetFile(request.FileId);
+           var result = await FileService.GetFile(request.FileId);
+           return result;
         }
 
         [Route("WordToPdf")]

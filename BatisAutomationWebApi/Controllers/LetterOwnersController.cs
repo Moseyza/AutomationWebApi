@@ -24,7 +24,8 @@ namespace BatisAutomationWebApi.Controllers
            
             var branchDtos = await BranchService.GetBranchDtos(dto.BranchIds);
             var user = new UserDto() { Id = dto.UserId };
-            return await LetterOwnerService.GetOwnersWithPicture(user, branchDtos);
+            var result =  await LetterOwnerService.GetOwnersWithPicture(user, branchDtos);
+            return result;
         }
 
 

@@ -11,7 +11,9 @@ namespace BatisAutomationWebApi.Controllers
         [Authorize]
         public async Task<LetterListerWithPaginationResult> Post([FromBody]PaginatedLettersRequestDto request)
         {
-            return await LetterService.GetDraftLettersWithPagination(request.OwnerId, request.From, request.To);
+
+            var result =  await LetterService.GetDraftLettersWithPagination(request.OwnerId, request.From, request.To);
+            return result;
         }
 
         // PUT api/<controller>/5

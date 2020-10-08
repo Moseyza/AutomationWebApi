@@ -42,9 +42,22 @@ namespace BatisAutomationWebApi.Controllers
                 {
                     bookmark.DefaultValue = await ParametersUtility.UpdateParameters(bookmark.DefaultValue, request.OwnerId);
                 }
+
+                foreach (var formBookmark in form.Bookmarks)
+                {
+                    if(formBookmark.Type != EnterpriseFormBookmarksTypesDto.Table)continue;
+                    formBookmark.TableColumns = formBookmark.TableColumns.OrderBy(x => x.ColumnIndex).ToList();
+                }
             }
 
             return forms;
+        }
+
+        [Route("IsAutoClose/{formId}")]
+        public async Task<bool> Get(Guid formId)
+        {
+            var form = await EnterpriseFormsService.GetEnterpriseForm(formId);
+            return form.AutomaticClosing;
         }
 
 
@@ -55,6 +68,13 @@ namespace BatisAutomationWebApi.Controllers
             foreach (var bookmark in form.Bookmarks)
             {
                 bookmark.DefaultValue = await ParametersUtility.UpdateParameters(bookmark.DefaultValue, request.OwnerId);
+            }
+            foreach (var bookmark in form.Bookmarks)
+            {
+                if (bookmark.Type == EnterpriseFormBookmarksTypesDto.Table)
+                {
+                    bookmark.TableColumns = bookmark.TableColumns.OrderBy(x => x.ColumnIndex).ToList();
+                }
             }
             return form;
         }
@@ -131,7 +151,7 @@ namespace BatisAutomationWebApi.Controllers
                 var formInfo = await CodeBehindCompiler.GetEnterpriseFormInfo(request.FormId.ToString(), request.ParametersValue, request.TableParametersValue);
                 var validationResult = await CodeBehindCompiler.GetFormValidatorResult(request.FormId.ToString(),
                     formInfo.EnterpriseForm.ValidationComputationCode, formInfo.ParametersValueDictunary,
-                    formInfo.TableParameterRows, request.ChangedParameterName, request.OwnerId.ToString());
+                    formInfo.TableParameterRows, request.ChangedParameterName, request.OwnerId.ToString(),LetterService);
 
                 if (validationResult != null /*&& !validationResult.HasError && !validationResult.HasBusinessError*/)
                 {
@@ -296,6 +316,8 @@ namespace BatisAutomationWebApi.Controllers
                     tableBookmarksDtos.Add(new EnterpriseFormBookmarkValueDto() { EnterpriseFormBookmarkName = tableName, Value = jsonStr, EnterpriseFormBookmarkId = tableId });
                 }
 
+                bool.TryParse(HttpContext.Current.Request.Params["shallSign"], out var shallSign);
+                bool.TryParse(HttpContext.Current.Request.Params["shallSetCopyReceivers"], out var shallSetCopyReceivers);
                 var sendLetterDto = new SendLetterDto
                 {
                     LetterRefrences = new List<LetterReferencesToOtherLettersDto>(),
@@ -305,7 +327,9 @@ namespace BatisAutomationWebApi.Controllers
                     CopyRecievers = copyReceivers,
                     DraftRecievers = draftReceivers,
                     TransferType = TransferType.SystemDelivery,
-                    Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId)
+                    Title = await ParametersUtility.UpdateParameters(enterpriseForm.Title, senderId),
+                    ShallSign = shallSign,
+                    ShallShowCopyReceiversInLetter = shallSetCopyReceivers
                 };
                 //setting some properties
                 sendLetterDto.Title = await ReplaceEnglishNameWithValue(bookmarkDtos, sendLetterDto.Title,enterpriseForm);
@@ -425,6 +449,12 @@ namespace BatisAutomationWebApi.Controllers
             {
                 return null;
             }
+        }
+
+        [Route("FormValues")]
+        public async Task<EnterpriseFormValuesDto> Post([FromBody]EnterpriseFormsValuesRequest request)
+        {
+            return await LetterService.GetEnterpriseFormValues(request.LetterId, request.LetterPossessionId);
         }
 
         private List<PartsDto> GetRequestAttachedFiles(HttpFileCollection files,List<string> fileBookmarks)

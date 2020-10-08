@@ -13,9 +13,16 @@ namespace BatisAutomationWebApi.Controllers
     [Authorize]
     public class ReceivedLettersController : ControllerBase
     {
-        public async Task<LetterListerWithPaginationResult> Post([FromBody]PaginatedLettersRequestDto request)
+        public async Task<LetterListerWithPaginationResult> Post([FromBody]PaginatedLettersRequestDto1 request)
         {
-            return await LetterService.GetReceivedLettersWithPagination(request.OwnerId,request.From,request.To);
+            
+            DateTime? from = null;
+            DateTime? to = null;
+            if (!string.IsNullOrEmpty(request.From))
+                from = DateTime.Parse(request.From.Substring(0, request.From.ToUpper().IndexOf("GMT", StringComparison.Ordinal) - 1));
+            if (!string.IsNullOrEmpty(request.To))
+                to = DateTime.Parse(request.To.Substring(0,request.To.ToUpper().IndexOf("GMT", StringComparison.Ordinal) - 1));
+            return await LetterService.GetReceivedLettersWithPagination(request.OwnerId,from,to);
         }
 
         // PUT api/<controller>/5

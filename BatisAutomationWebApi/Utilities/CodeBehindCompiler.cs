@@ -24,7 +24,7 @@ namespace BatisAutomationWebApi.Utilities
         private static Dictionary<FormBehindCode, Assembly> _behindCodeAssemblies = new Dictionary<FormBehindCode, Assembly>();
 
 
-        public static async Task<EnterpriseFormValidatorResult> GetFormValidatorResult(string formId, string behindCode, Dictionary<string, string> parametersDic, Dictionary<string, List<dynamic>> tableParameterRow, string changedParameterName, string senderId)
+        public static async Task<EnterpriseFormValidatorResult> GetFormValidatorResult(string formId, string behindCode, Dictionary<string, string> parametersDic, Dictionary<string, List<dynamic>> tableParameterRow, string changedParameterName, string senderId,LetterService letterService)
         {
 
             var assembly = GetBehindCodeAssembly(new Guid(formId), behindCode);
@@ -36,9 +36,13 @@ namespace BatisAutomationWebApi.Utilities
 
                     try
                     {
-                        var result = validatorInstance.ClientSideCheck(parametersDic, await GetAccountInfo(new Guid(senderId)),
-                        changedParameterName, tableParameterRow);
-
+                        var accountInfo = await GetAccountInfo(new Guid(senderId));
+                        var result = validatorInstance.ClientSideCheck(parametersDic, accountInfo, changedParameterName, tableParameterRow);
+                        if (result.RequestForReloadingData.Any())
+                        {
+                            var reloadedData =  await letterService.ReloadFormData(new Guid(formId), accountInfo, result.RequestForReloadingData);
+                            result =  validatorInstance.ClientSideDataReloader(parametersDic, accountInfo, reloadedData, tableParameterRow);
+                        }
                         return result;
                     }
                     catch (Exception ex)

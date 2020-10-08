@@ -109,6 +109,11 @@ namespace BatisServiceProvider.Services
             return result;
         }
 
+        public async Task<IDictionary<string,IDictionary<string,string>>> ReloadFormData(Guid formId,Dictionary<string,string> accountInfo,IDictionary<string,IDictionary<string,string>> request)
+        {
+            return await Service.ReloadFormData(formId, accountInfo, request);
+        }
+
         public async Task<LetterDto> GetLetterDto(Guid letterPossessionId)
         {
             return await Service.GetLetterPossession(letterPossessionId);

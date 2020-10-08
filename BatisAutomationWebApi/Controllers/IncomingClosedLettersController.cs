@@ -11,7 +11,13 @@ namespace BatisAutomationWebApi.Controllers
         
         public async Task<LetterListerWithPaginationResult> Post([FromBody]PaginatedLettersRequestDto dto)
         {
-            return await LetterService.GetIncomingClosedLetters(dto.OwnerId,dto.From,dto.To);
+            var result =  await LetterService.GetIncomingClosedLetters(dto.OwnerId,dto.From,dto.To);
+            foreach (var letterDto in result.LetterList)
+            {
+                letterDto.IsClosed = true;
+            }
+
+            return result;
         }
 
       
