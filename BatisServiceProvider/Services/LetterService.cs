@@ -38,6 +38,13 @@ namespace BatisServiceProvider.Services
             return await Service.GetLetterTrail(letterDto);
         }
 
+        public async Task<LetterTrailWithAttachmentsDto> GetRemoteLetterTrail(Guid letterPossessionId, Guid letterOwnerId) 
+        {
+            var letterDto = new LetterDto() { LetterPossessionId = letterPossessionId };
+            var result = await Service.GetRemoteLetterTrailForIncommingLetter(letterDto, letterOwnerId);
+            return result; 
+        }
+
         public async Task<LetterTrailWithAttachmentsDto> GetLetterTrailWithAttachment(Guid letterPossessionId, Guid currentOwnerId)
         {
             var letterDto = await Service.GetLetterPossession(letterPossessionId);
@@ -307,6 +314,20 @@ namespace BatisServiceProvider.Services
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public async Task<MailState> GetEmailState(Guid id) 
+        {
+            var state = await Service.GetEmailStatus(id);
+            return state;
+
+        }
+
+        public async Task<MailState> GetTelegramState(Guid id)
+        {
+            var state = await Service.GetMessagingAppMessageState(id);
+            return state;
+
         }
 
     }

@@ -68,6 +68,13 @@ namespace BatisAutomationWebApi.Controllers
             return result;
         }
 
+        [Route("RemoteLetterTrail")]
+        public async Task<LetterTrailWithAttachmentsDto> Post([FromBody] RemoteLetterTrailRequestDto request) 
+        {
+            var result = await LetterService.GetRemoteLetterTrail(request.LetterPossessionId, request.OwnerId);
+            return result;
+        }
+
         [Route("LetterTrailWithAttachment")]
         public async Task<LetterTrailWithAttachmentsDto> Post([FromBody]LetterTrailWithAttachmentRequestDto request)
         {
@@ -215,6 +222,21 @@ namespace BatisAutomationWebApi.Controllers
         {
              await LetterService.Delete(letterDto);
 
+        }
+
+        [Route("EmailState")]
+        public async Task<MailState> Post([FromBody] EmailStateRequest request) 
+        {
+            var result = await LetterService.GetEmailState(request.EmailReferenceId);
+            return result;
+        }
+
+
+        [Route("TelegramState")]
+        public async Task<MailState> Post([FromBody] TelegramStateRequest request)
+        {
+            var result = await LetterService.GetTelegramState(request.TelegramReferenceId);
+            return result;
         }
 
 

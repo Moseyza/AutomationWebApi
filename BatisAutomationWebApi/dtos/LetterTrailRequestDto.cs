@@ -15,4 +15,10 @@ namespace BatisAutomationWebApi.dtos
         public Guid LetterPossessionId { get; set; }
         public Guid CurrentOwnerId { get; set; }
     }
+
+    public class RemoteLetterTrailRequestDto 
+    {
+        public Guid LetterPossessionId { get; set; }
+        public Guid OwnerId { get; set; }
+    }
 }

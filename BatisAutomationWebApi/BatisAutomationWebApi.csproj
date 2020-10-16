@@ -175,6 +175,7 @@
     <Compile Include="dtos\BehindCodeCompilingRequest.cs" />
     <Compile Include="dtos\ClientSideInitializeRequest.cs" />
     <Compile Include="dtos\CloseLetterRequestDto.cs" />
+    <Compile Include="dtos\EmailStateRequest.cs" />
     <Compile Include="dtos\EnterpriseFormRequest.cs" />
     <Compile Include="dtos\EnterpriseFormValidValuesRequest.cs" />
     <Compile Include="dtos\FileRequestDto.cs" />
