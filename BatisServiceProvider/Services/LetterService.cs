@@ -330,5 +330,11 @@ namespace BatisServiceProvider.Services
 
         }
 
+        public async Task<DependencyTrailDto> GetDependencyTrail(Guid ownerId,Guid letterPossessionId) 
+        {
+            var result = await Service.GetDependencyTrail(new DependencyTrailRequest() { CurrentLetterOwnerId = ownerId, LetterPossessionId = letterPossessionId });
+            return result;
+        }
+
     }
 }

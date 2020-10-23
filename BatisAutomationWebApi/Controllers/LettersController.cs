@@ -239,6 +239,14 @@ namespace BatisAutomationWebApi.Controllers
             return result;
         }
 
+        [Route("DependencyTrail")]
+        public async Task<DependencyTrailDto> Post([FromBody] dtos.DependencyTrailRequest request)
+        {
+            var result = await LetterService.GetDependencyTrail(request.OwnerId,request.LetterPossessionId);
+            return result;
+        }
+
+
 
     }
 }
