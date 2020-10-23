@@ -69,10 +69,21 @@ namespace BatisAutomationWebApi.Controllers
         }
 
         [Route("RemoteLetterTrail")]
-        public async Task<LetterTrailWithAttachmentsDto> Post([FromBody] RemoteLetterTrailRequestDto request) 
+        public async Task<LetterTrailWithAttachmentsDto> Post([FromBody] RemoteLetterTrailRequestDto request)
         {
-            var result = await LetterService.GetRemoteLetterTrail(request.LetterPossessionId, request.OwnerId);
-            return result;
+            try
+            {
+                var result =
+                    await LetterService.GetRemoteLetterTrailForIncomingLetter(request.LetterPossessionId,
+                        request.OwnerId);
+                if (result == null)
+                    result = await LetterService.GetRemoteLetterTrail(request.LetterPossessionId, request.OwnerId);
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         [Route("LetterTrailWithAttachment")]
