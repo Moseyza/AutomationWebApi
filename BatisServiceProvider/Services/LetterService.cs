@@ -38,11 +38,18 @@ namespace BatisServiceProvider.Services
             return await Service.GetLetterTrail(letterDto);
         }
 
-        public async Task<LetterTrailWithAttachmentsDto> GetRemoteLetterTrail(Guid letterPossessionId, Guid letterOwnerId) 
+        public async Task<LetterTrailWithAttachmentsDto> GetRemoteLetterTrailForIncomingLetter(Guid letterPossessionId, Guid letterOwnerId) 
         {
             var letterDto = new LetterDto() { LetterPossessionId = letterPossessionId };
             var result = await Service.GetRemoteLetterTrailForIncommingLetter(letterDto, letterOwnerId);
             return result; 
+        }
+
+        public async Task<LetterTrailWithAttachmentsDto> GetRemoteLetterTrail(Guid letterPossessionId, Guid letterOwnerId)
+        {
+            var letterDto = new LetterDto() { LetterPossessionId = letterPossessionId };
+            var result = await Service.GetRemoteLetterTrail(letterDto, letterOwnerId);
+            return result;
         }
 
         public async Task<LetterTrailWithAttachmentsDto> GetLetterTrailWithAttachment(Guid letterPossessionId, Guid currentOwnerId)
