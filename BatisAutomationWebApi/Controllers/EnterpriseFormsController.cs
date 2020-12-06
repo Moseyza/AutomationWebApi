@@ -52,6 +52,12 @@ namespace BatisAutomationWebApi.Controllers
 
             return forms;
         }
+        [Route("UpdateParameters")]
+        public async  Task<string> Post([FromBody]UpdateParameterRequest request)
+        {
+            var result =  await ParametersUtility.UpdateParameters(request.Value, request.OwnerId);
+            return result;
+        }
 
         [Route("IsAutoClose/{formId}")]
         public async Task<bool> Get(Guid formId)

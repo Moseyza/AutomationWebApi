@@ -198,6 +198,7 @@
     <Compile Include="dtos\SendFormRequest.cs" />
     <Compile Include="dtos\SendingFormResults.cs" />
     <Compile Include="dtos\SendLetterAndSaveDraftResults.cs" />
+    <Compile Include="dtos\UpdateParameterRequest.cs" />
     <Compile Include="dtos\UserWithBranchesDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
